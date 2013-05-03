@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
     <link rel="apple-touch-icon" href="http://octodex.github.com/images/codercat.jpg"/>
     <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/spacelab/bootstrap.min.css" rel="stylesheet">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.10/socket.io.min.js"></script>
+    <script>
+      var socket = io.connect("http://192.155.86.153:8888/");
+      socket.on('connect', function() {
+      document.getElementById("state").class = 'icon-ok'
+      });
+    </script>
     <style>
       .top-center{
       margin: auto;
@@ -16,6 +23,6 @@
     </style>
   </head>
   <body>
-    <h3 class="top-center">CoinChat Mobile (by whiskers75)</h3>
+    <h3 class="top-center">CoinChat Mobile (by whiskers75)</h3> <i class="icon-off" id="state"></i>
   </body>
 </html>
