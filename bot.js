@@ -6,7 +6,7 @@ var random = require("secure_random");
 var users = [];
 var chatBuffer = [];
 var chance = 60;
-var edge = 0.95; // EV
+var edge = 0.93; // EV + 2% tip fee
 var payout = 1.4;
 var shutdown = false;
 var lastWinner = null;
@@ -111,7 +111,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic The official SatoshiDice for CoinChat! | Admin approved | ' + ((1 - edge) * 100).toFixed(2) + '% house edge! | YOU decide your chances of winning! | !help for info', "000");
+                chat('botgames', '/topic The official SatoshiDice for CoinChat! | Admin approved | ' + (((1 - edge) * 100) - 2).toFixed(2) + '% house edge! | YOU decide your chances of winning! | !help for info', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "505");
