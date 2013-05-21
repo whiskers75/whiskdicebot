@@ -70,13 +70,13 @@ socket.on("connect", function() {
 			if (rand < (chance + 1)) {
 			    var totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout).toFixed(2));
 			    chat('botgames', data.user + ': You win! Sending ' + totip + '! (' + chance + '% chance)', "090");
-                            chat('botgames', '!; win ' + data.user + ' ' + totip, "090");
+                            chat('botgames', '!; win ' + data.user + ' ' + totip, "000");
 			    lastWinner = data.user;
                             tip({user: data.user, room: 'botgames', tip: totip, message: 'You win!'});
 			}
 			else {
 			    chat('botgames', data.user + ': Not a winner, sorry! (' + chance + '% chance)', "505");
-                            chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "090");
+                            chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
 			       chat('botgames', lastWinner + ': You won this payment!', "090");
 			       totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1));
