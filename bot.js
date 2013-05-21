@@ -6,7 +6,7 @@ var random = require("secure_random");
 var users = [];
 var chatBuffer = [];
 var chance = 60;
-var edge = 0.93; // EV + 2% tip fee
+var edge = 0.85; // EV + 2% tip fee
 var payout = 1.4;
 var shutdown = false;
 var lastWinner = null;
@@ -52,7 +52,7 @@ socket.on("connect", function() {
     setTimeout(function() {
 	socket.on("chat", function(data) {
 	    console.log(data.room + ' | ' + data.user + ' | ' +  data.message + ' (' + data.winbtc + ' mBTC)');
-            if (data.message.substring(0, 57) === "<span class='label label-success'>has tipped WhiskDiceBot" && data.room === 'botgames') {
+            if ((data.message.substring(0, 57) === "<span class='label label-success'>has tipped WhiskDiceBot" || data.message.substring(0, 57) === "<span class='label label-success'>has tipped whiskdicebot") && data.room === 'botgames') {
                 var message = Number(data.message.substring(data.message.indexOf('message: BOT ') + 12, data.message.indexOf('%) !')));
 		if (message > 0 && message < 76) {
 		    // yay
@@ -60,19 +60,23 @@ socket.on("connect", function() {
 		    payout = Number((edge / (message / 100)).toFixed(2));
                     chat('botgames', data.user + ': You selected a ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
 		}
+		else {
+		    chance = 60;
+                    payout = Number((edge / (chance / 100)).toFixed(2));
+                    chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
+                }
                 if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
 		    random.getRandomInt(1, 100, function(err, rand) {
 			if (rand < (chance + 1)) {
-			    console.log('Won!');
-			    console.log('Sending');
 			    var totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout).toFixed(2));
-			    chat('botgames', data.user + ': You win! Sending ' + totip + '! (' + rand + '/' + chance +')', "090");
+			    chat('botgames', data.user + ': You win! Sending ' + totip + '! (' + chance + '% chance)', "090");
+                            chat('botgames', '!; win ' + data.user + ' ' + totip, "090");
 			    lastWinner = data.user;
-                            tip({user: data.user, room: 'botgames', tip: totip, message: 'You win! Sending ' + totip + '! (' + rand + '/' + chance + ')'});
+                            tip({user: data.user, room: 'botgames', tip: totip, message: 'You win!'});
 			}
 			else {
-			    console.log('Lost');
-			    chat('botgames', data.user + ': Not a winner, sorry! (' + chance + '% chance, ' + rand + '/' + chance + ')', "505");
+			    chat('botgames', data.user + ': Not a winner, sorry! (' + chance + '% chance)', "505");
+                            chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "090");
 			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
 			       chat('botgames', lastWinner + ': You won this payment!', "090");
 			       totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1));
@@ -162,6 +166,7 @@ socket.on("connect", function() {
 		chat('botgames', data.user + ': Commands: !state, !users, !bots, !lastwinner', "090");
                 chat('botgames', data.user + ': To use: /tip WhiskDiceBot (amount) BOT (win percentage)%', "090");
                 chat('botgames', data.user + ': Percentage can be anything from 1% to 75%', "090");
+                chat('botgames', data.user + ': Or go to go.cur.lv/whiskchat and use the /bet command. (/bet (amount) percentage%)', "090");
 		socket.emit("getbalance", {});
 		
             }
