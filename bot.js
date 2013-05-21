@@ -115,7 +115,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic The official SatoshiDice for CoinChat! | Admin approved | ' + (((1 - edge) * 100) - 2).toFixed(2) + '% house edge! | YOU decide your chances of winning! | !help for info', "000");
+                chat('botgames', '/topic The official SatoshiDice for CoinChat! | Admin approved | ' + ((1 - edge) * 100).toFixed(2) + '% house edge (live) | YOU decide your chances of winning! | New and improved bet engine! | !help for info', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "505");
@@ -220,13 +220,15 @@ socket.on("connect", function() {
 	setTimeout(function() {
 	    chat('botgames', '/bold WhiskDiceBot initialized! (!help for info)', "090");
 	    chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
-            chat('botgames', '/topic The official SatoshiDice for CoinChat! | Admin approved | ' + ((1 - edge) * 100).toFixed(2) + '% house edge (live) | YOU decide your chances of winning! | New and improved bet engine! | !help for info', "000");
 	    socket.emit("getbalance", {});
             socket.emit('getcolors', {});
             started = true;
 	}, 3000); // Match the setTimeout for the chat engine
 	
-	
+	setTimeout(function() {
+	    chat('botgames', '/bold Auto-restarting! Stop betting.', "505");
+	    shutdown = true;
+	}, 900000);
     });
     socket.on('toprooms', function(data) {
 	var foundOwnRoom = false;
