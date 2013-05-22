@@ -8,6 +8,7 @@ var chatBuffer = [];
 var chance = 60;
 var edge = 0.85; // EV + 2% tip fee
 var payout = 1.4;
+var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
 var socket = io.connect("http://192.155.86.153:8888/");
@@ -156,7 +157,8 @@ socket.on("connect", function() {
             if (data.message === "!lastwinner" && data.room === "botgames") {
 		chat('botgames', 'Last winner: ' + lastWinner, "090");
             }
-            if (data.message === "!users" && data.room === "botgames") {
+            if (data.message.substr(0, 6) === "!users" && data.room === "botgames") {
+		var toproom = data.message.split(" ")[1];
 		socket.emit('toprooms', {});
             }
             if (data.message === "!bots" && data.room === "botgames") {
@@ -234,8 +236,8 @@ socket.on("connect", function() {
     socket.on('toprooms', function(data) {
 	var foundOwnRoom = false;
 	data.list.forEach(function(room) {
-	    if (room.room === 'botgames') {
-                chat('botgames', '/bold #botgames: ' + room.users + ' people online!', '090');
+	    if (room.room === toproom) {
+                chat('botgames', '/bold #' + toproom + ': ' + room.users + ' people online!', '090');
 		foundOwnRoom = true;
 	    }
 	});
