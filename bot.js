@@ -158,7 +158,7 @@ socket.on("connect", function() {
 		chat('botgames', 'Last winner: ' + lastWinner, "090");
             }
             if (data.message.substr(0, 6) === "!users" && data.room === "botgames") {
-		var toproom = data.message.split(" ")[1];
+		var toproom = data.message.substr(7, data.message.length);
 		socket.emit('toprooms', {});
             }
             if (data.message === "!bots" && data.room === "botgames") {
