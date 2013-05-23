@@ -227,11 +227,10 @@ socket.on("connect", function() {
             socket.emit('getcolors', {});
             started = true;
 	}, 3000); // Match the setTimeout for the chat engine
-	
-	setTimeout(function() {
-	    chat('botgames', '/bold Auto-restarting! Stop betting.', "505");
-	    shutdown = true;
-	}, 900000);
+    });
+    socket.on('disconnect', function() {
+	chat('botgames', 'CONNECTION FAILURE. REBOOTING!', "505");
+	process.exit(1);
     });
     socket.on('toprooms', function(data) {
 	var foundOwnRoom = false;
