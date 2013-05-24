@@ -168,7 +168,7 @@ socket.on("connect", function() {
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
-                    {q: data.message.split(' ').splice(0, 1).join(' ')},
+                    {q: data.message.split(' ').splice(0, 1).join(' '), key: process.env.YT_KEY},
                     function(err, res) {
 			chat('botgames', 'YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
 		    }
