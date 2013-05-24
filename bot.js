@@ -206,7 +206,7 @@ socket.on("connect", function() {
 	    tippedProfit = false;
 	    setTimeout(function() {
 		if (!tippedProfit && balance >= 15.1) {
-		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15});
+		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15, message: 'Tipping profit!'});
 		    tippedProfit = true;
 		}
 	    }, 30000);
