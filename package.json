@@ -5,6 +5,7 @@
     "private": true,
     "dependencies": {
 	"socket.io-client": "*",
-        "secure_random": "*"
+        "secure_random": "*",
+	"youtube-feeds": "*"
     }
 }
