@@ -201,7 +201,7 @@ socket.on("connect", function() {
         console.log('NEW BALANCE: ' + balance);
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
         //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "505");
-	if (balance >= 15.25) {
+	if (balance >= 15.1) {
 	    setTimeout(function() {
 		socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15});
 	    }, 30000);
