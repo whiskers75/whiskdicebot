@@ -172,6 +172,7 @@ socket.on("connect", function() {
                         'q':              encodeURIComponent('"' + data.message.split(' ').splice(0, 1).join(' ') + '"')
                     },
                     function(err, res) {
+			console.log('YT: ' + res);
 			chat('botgames', data.user + ': YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
 		    }
                 );
