@@ -173,7 +173,7 @@ socket.on("connect", function() {
                         'max-results':  1,
                         orderby:        'published'
                     },
-                    function(res) {
+                    function(err, res) {
 			chat('botgames', data.user + ': YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
 		    }
                 );
