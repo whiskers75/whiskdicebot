@@ -3,6 +3,7 @@
 var io = require("socket.io-client");
 var started = false;
 var random = require("secure_random");
+var youtube = require('youtube-feeds');
 var users = [];
 var chatBuffer = [];
 var chance = 60;
@@ -164,6 +165,18 @@ socket.on("connect", function() {
             }
             if (data.message === "!bots" && data.room === "botgames") {
 		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
+            }
+	    if (data.message.split(' ')[0] === "!youtube") {
+                youtube.feeds.videos(
+                    {
+                        q:              data.message.split(' ')[1],
+                        'max-results':  1,
+                        orderby:        'published'
+                    },
+                    function(res) {
+			chat('botgames', data.user + ': YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
+		    }
+                );
             }
             if (data.message === "!help" && data.room === "botgames") {
 		chat('botgames', data.user + ': This is a SatoshiDice clone, for CoinChat!', "090");
