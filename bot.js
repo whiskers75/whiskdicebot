@@ -14,7 +14,6 @@ var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
 var socket = io.connect("http://192.155.86.153:8888/");
-
 console.log('Connecting');
 socket.on("connect", function() {
     console.log('Connected');
@@ -170,7 +169,9 @@ socket.on("connect", function() {
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
                     {q: data.message.split(' ').splice(0, 1).join(' ')},
-                    youtubeHandler
+                    function(err, res) {
+			chat('botgames', 'YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
+		    }
                 );
             }
             if (data.message === "!help" && data.room === "botgames") {
@@ -268,7 +269,4 @@ socket.on('error', function(err) {
     console.log(err);
     process.exit(1);
 });
-function youtubeHandler(err, res) {
-    console.log('YT: ' + JSON.stringify(res));
-    chat('botgames', 'YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
-}
+
