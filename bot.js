@@ -169,7 +169,7 @@ socket.on("connect", function() {
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
                     {
-                        q:              data.message.split(' ').splice(0, 1).join(' '),
+                        q:              encodeURIComponent('"' + data.message.split(' ').splice(0, 1).join(' ') + '"'),
 			'max-results':  1
                     },
                     function(err, res) {
