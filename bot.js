@@ -16,7 +16,7 @@ var lastWinner = null;
 var socket = io.connect("http://192.155.86.153:8888/");
 function youtubeHandler(err, res) {
     console.log('YT: ' + JSON.stringify(res));
-    chat('botgames', data.user + ': YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
+    chat('botgames', 'YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
 }
 console.log('Connecting');
 socket.on("connect", function() {
