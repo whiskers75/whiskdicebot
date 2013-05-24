@@ -170,8 +170,7 @@ socket.on("connect", function() {
                 youtube.feeds.videos(
                     {
                         q:              data.message.split(' ').splice(0, 1).join(' '),
-                        'max-results':  1,
-                        orderby:        'published'
+			'max-results':  1
                     },
                     function(err, res) {
 			chat('botgames', data.user + ': YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
