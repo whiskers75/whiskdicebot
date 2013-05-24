@@ -8,6 +8,7 @@ var chatBuffer = [];
 var chance = 60;
 var edge = 0.85; // EV + 2% tip fee
 var payout = 1.4;
+var tippedProfit = true;
 var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
@@ -202,8 +203,12 @@ socket.on("connect", function() {
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
         //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "505");
 	if (balance >= 15.1) {
+	    tippedProfit = false;
 	    setTimeout(function() {
-		socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15});
+		if (!tippedProfit && balance >= 15.1) {
+		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15});
+		    tippedProfit = true;
+		}
 	    }, 30000);
 	}
     });
