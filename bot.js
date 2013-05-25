@@ -176,7 +176,6 @@ socket.on("connect", function() {
             }
             if (data.message.split(' ')[0] === "!newgame" && data.room === "20questions" && !qgame) {
 		qlist = '';
-                chat('main', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
                 chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
 		chat('20questions', '/bold ' + data.user + ': choose a word! You have 30 seconds until the game starts.', '090');
 		qboss = data.user;
@@ -201,7 +200,6 @@ socket.on("connect", function() {
                 qlist = '';
 		qgame = false;
 		qboss = 'Game not in progress';
-                chat('main', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
                 chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
             if (data.message.split(' ')[0] === "!hint" && data.room === "20questions" && qgame && data.user === qboss) {
