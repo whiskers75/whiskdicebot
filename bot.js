@@ -207,6 +207,7 @@ socket.on("connect", function() {
             if (data.message.split(' ')[0] === "!hint" && data.room === "20questions" && qgame && data.user === qboss) {
                 var tmp = data.message.split(' ');
 		tmp.shift();
+		var tmp = tmp.join(' ');
 		qlist += ' "' + tmp + '" ';
                 chat('20questions', 'Added to list: ' + tmp, "000");
             }
