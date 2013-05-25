@@ -274,6 +274,7 @@ socket.on("connect", function() {
 	    chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
 	    socket.emit("getbalance", {});
             socket.emit('getcolors', {});
+            chat('20questions', '/bold 20 Questions bot initialized! (!help for info)', "090");
             started = true;
 	}, 3000); // Match the setTimeout for the chat engine
     });
