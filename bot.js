@@ -15,6 +15,8 @@ var chance = 60;
 var edge = 0.95; // EV + 2% tip fee
 var payout = 1.4;
 var qlist = "";
+var qgame = false;
+var qboss = 'Game not in progress';
 var tippedProfit = true;
 var toproom = 'botgames';
 var shutdown = false;
@@ -172,30 +174,37 @@ socket.on("connect", function() {
             if (data.message === "!bots" && data.room === "botgames") {
 		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
             }
-            if (data.message === "!20q" && data.room === "20questions") {
+            if (data.message.split(' ')[0] === "!newgame" && data.room === "20questions" && !qgame) {
 		qlist = '';
                 chat('main', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
                 chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
-		chat('20questions', '/bold Somebody choose a word, and then then start guessing! Game will start in 15 seconds...', '090');
+		chat('20questions', '/bold ' + data.user + ': choose a word, and then start guessing! Game will start in 15 seconds...', '090');
+		qboss = data.user;
 		setTimeout(function() {
                     chat('20questions', '/bold Game started! Begin guessing!', '090');
-		}, 30000);
+		    qgame = true;
+		}, 15000);
             }
-            if (data.message === "!20qlist" && data.room === "20questions") {
+            if (data.message === "!hints" && data.room === "20questions" && qgame) {
                 var tmp = ("Hints: " + qlist).chunk(200);
 		tmp.forEach(function(chunk) {
 		    chat('20questions', chunk, '090');
 		});
 	    }
             if (data.message === "!help" && data.room === "20questions") {
-                chat('20questions', 'Commands: !20q (start new game) | !20qlist (get hints) | !20add <one word hint> (add hint) | !20win <winner> (finish game, and announce winner)', '090');
+                chat('20questions', 'Commands: !newgame (start new game) | !hints (get hints) | !hint <one word hint> (add hint) | !winner <winner> (finish game, and announce winner) | !state (check state)', '090');
             }
-	    if (data.message.split(' ')[0] === "!20win" && data.room === "20questions") {
+            if (data.message === "!state" && data.room === "20questions") {
+                chat('20questions', 'Game on: ' + qgame + ' | Admin: ' + qboss, '090');
+            }
+            if (data.message.split(' ')[0] === "!winner" && data.room === "20questions" && qgame) {
                 qlist = '';
+		qgame = false;
+		qboss = 'Game not in progress';
                 chat('main', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
                 chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
-            if (data.message.split(' ')[0] === "!20add" && data.room === "20questions") {
+            if (data.message.split(' ')[0] === "!hint" && data.room === "20questions" && qgame && data.user === qboss) {
                 var tmp = data.message.split(' ');
 		tmp.shift();
 		qlist += ' "' + tmp + '" ';
