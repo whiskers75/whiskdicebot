@@ -14,6 +14,8 @@ var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
 var socket = io.connect("http://192.155.86.153:8888/");
+var redis = require('redis');
+var db = redis.createClient(9891, squawfish.redistogo.com);
 console.log('Connecting');
 socket.on("connect", function() {
     console.log('Connected');
@@ -33,6 +35,10 @@ socket.on("connect", function() {
     function tip(obj) {
 	chatBuffer.push({tipobj: obj});
     }
+    db.auth(process.env.DBPASS, redis.print);
+    db.on('error', function(err) {
+	chat('botgames', 'DB: ' + err, '505');
+    });
     setInterval(function() {	
 	if (chatBuffer[0]) {
 	    if (chatBuffer[0].tipobj) {
@@ -165,6 +171,12 @@ socket.on("connect", function() {
             }
             if (data.message === "!bots" && data.room === "botgames") {
 		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
+            }
+            if (data.message === "!20q" && data.room === "botgames") {
+                chat('main', '/bold New game of 20 Questions starting! Join #botgames to play!', "090");
+            }
+            if (data.message.split(' ')[0] === "!20win" && data.room === "botgames") {
+                chat('main', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
