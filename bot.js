@@ -209,7 +209,7 @@ socket.on("connect", function() {
 		tmp.shift();
 		var tmp = tmp.join(' ');
 		qlist += ' ' + tmp + ' | ';
-                chat('20questions', '✔ added', "090");
+                chat('20questions', '✔ ' + tmp, "090");
             }
             if (data.message.split(' ')[0] === "!ahint" && data.room === "20questions" && qgame && data.user === qboss) {
                 var tmp = data.message.split(' ');
