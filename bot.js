@@ -195,7 +195,7 @@ socket.on("connect", function() {
                 chat('20questions', 'Commands: !newgame (start new game) | !hints (get hints) | !hint <one word hint> (add hint) | !winner <winner> (finish game, and announce winner) | !state (check state)', '090');
             }
             if (data.message === "!state" && data.room === "20questions") {
-                chat('20questions', 'Game on: ' + qgame + ' | Admin: ' + qboss, '090');
+                chat('20questions', 'Game on: ' + qgame + ' | Word master: ' + qboss, '090');
             }
             if (data.message.split(' ')[0] === "!winner" && data.room === "20questions" && qgame) {
                 qlist = '';
@@ -208,8 +208,8 @@ socket.on("connect", function() {
                 var tmp = data.message.split(' ');
 		tmp.shift();
 		var tmp = tmp.join(' ');
-		qlist += ' "' + tmp + '" ';
-                chat('20questions', 'Added to list: ' + tmp, "000");
+		qlist += ' ' + tmp + ' | ';
+                chat('20questions', '✔ added', "090");
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
