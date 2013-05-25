@@ -172,32 +172,32 @@ socket.on("connect", function() {
             if (data.message === "!bots" && data.room === "botgames") {
 		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
             }
-            if (data.message === "!20q" && data.room === "guessgame") {
+            if (data.message === "!20q" && data.room === "20questions") {
 		qlist = '';
-                chat('main', '/bold New game of 20 Questions starting! Join #guessgame to play!', "090");
-                chat('guessgame', '/bold New game of 20 Questions starting! Join #guessgame to play!', "090");
-		chat('guessgame', '/bold Somebody choose a word, and then then start guessing! Game will start in 15 seconds...', '090');
+                chat('main', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
+                chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
+		chat('20questions', '/bold Somebody choose a word, and then then start guessing! Game will start in 15 seconds...', '090');
 		setTimeout(function() {
-                    chat('guessgame', '/bold Game started! Begin guessing!', '090');
+                    chat('20questions', '/bold Game started! Begin guessing!', '090');
 		}, 30000);
             }
-            if (data.message === "!20qlist" && data.room === "guessgame") {
+            if (data.message === "!20qlist" && data.room === "20questions") {
                 var tmp = ("Hints: " + qlist).chunk(200);
 		tmp.forEach(function(chunk) {
-		    chat('guessgame', chunk, '090');
+		    chat('20questions', chunk, '090');
 		});
 	    }
-            if (data.message === "!help" && data.room === "guessgame") {
-                chat('guessgame', 'Commands: !20q (start new game) | !20qlist (get hints) | !20add <one word hint> (add hint) | !20win <winner> (finish game, and announce winner)', '090');
+            if (data.message === "!help" && data.room === "20questions") {
+                chat('20questions', 'Commands: !20q (start new game) | !20qlist (get hints) | !20add <one word hint> (add hint) | !20win <winner> (finish game, and announce winner)', '090');
             }
-	    if (data.message.split(' ')[0] === "!20win" && data.room === "guessgame") {
+	    if (data.message.split(' ')[0] === "!20win" && data.room === "20questions") {
                 qlist = '';
                 chat('main', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
-                chat('guessgame', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
+                chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
-            if (data.message.split(' ')[0] === "!20add" && data.room === "guessgame") {
+            if (data.message.split(' ')[0] === "!20add" && data.room === "20questions") {
 		qlist += ' | ' + data.message.split(' ')[1] + ' | ';
-                chat('guessgame', 'Added to list: ' + data.message.split(' ')[1], "000");
+                chat('20questions', 'Added to list: ' + data.message.split(' ')[1], "000");
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
@@ -263,7 +263,7 @@ socket.on("connect", function() {
 	    }
 	});
 	// socket.emit('joinroom', {join: 'botgames'});
-	socket.emit('joinroom', {join: 'guessgame'});
+	socket.emit('joinroom', {join: '20questions'});
 	socket.on("newuser", function(data) {
 	    users.push(data.username);
 	});
