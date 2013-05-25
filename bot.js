@@ -1,5 +1,10 @@
 // CoinChat bot
 
+String.prototype.chunk = function(size) {
+    return [].concat.apply([],
+                           this.split('').map(function(x,i){ return i%size ? [] : this.slice(i,i+size) }, this)
+                          )
+}
 var io = require("socket.io-client");
 var started = false;
 var random = require("secure_random");
@@ -9,6 +14,7 @@ var chatBuffer = [];
 var chance = 60;
 var edge = 0.95; // EV + 2% tip fee
 var payout = 1.4;
+var qlist = "";
 var tippedProfit = true;
 var toproom = 'botgames';
 var shutdown = false;
@@ -167,12 +173,24 @@ socket.on("connect", function() {
 		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
             }
             if (data.message === "!20q" && data.room === "20questions") {
+		qlist = '';
                 chat('main', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
                 chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
             }
-            if (data.message.split(' ')[0] === "!20win" && data.room === "20questions") {
+            if (data.message === "!20qlist" && data.room === "20questions") {
+                var tmp = ("Hints: " + qlist).chunk(200);
+		tmp.forEach(function(chunk) {
+		    chat('20questions', chunk, '090');
+		});
+	    }
+                if (data.message.split(' ')[0] === "!20win" && data.room === "20questions") {
+                qlist = '';
                 chat('main', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
                 chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
+            }
+            if (data.message.split(' ')[0] === "!20add" && data.room === "20questions") {
+		qlist += ' ' + data.message.split(' ').splice(0, 1).join(' ') + ' ';
+                chat('20questions', '/bold Added to list: ' + data.message.split(' ').splice(0, 1).join(' '), "505");
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
