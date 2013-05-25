@@ -211,7 +211,14 @@ socket.on("connect", function() {
 		qlist += ' ' + tmp + ' | ';
                 chat('20questions', '✔ added', "090");
             }
-	    if (data.message.split(' ')[0] === "!youtube") {
+            if (data.message.split(' ')[0] === "!ahint" && data.room === "20questions" && qgame && data.user === qboss) {
+                var tmp = data.message.split(' ');
+                tmp.shift();
+                var tmp = tmp.join(' ');
+                qlist += ' ✗ ' + tmp + ' | ';
+                chat('20questions', '✗ ' + tmp, "505");
+            }
+            if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
                     {q: data.message.split(' ').splice(0, 1).join(' '), key: process.env.YT_KEY},
                     function(err, res) {
