@@ -166,11 +166,13 @@ socket.on("connect", function() {
             if (data.message === "!bots" && data.room === "botgames") {
 		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
             }
-            if (data.message === "!20q" && data.room === "botgames") {
-                chat('main', '/bold New game of 20 Questions starting! Join #botgames to play!', "090");
+            if (data.message === "!20q" && data.room === "20questions") {
+                chat('main', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
+                chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
             }
-            if (data.message.split(' ')[0] === "!20win" && data.room === "botgames") {
+            if (data.message.split(' ')[0] === "!20win" && data.room === "20questions") {
                 chat('main', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
+                chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
@@ -235,8 +237,8 @@ socket.on("connect", function() {
 		users = data.users;
 	    }
 	});
-	// socket.emit('joinroom', {join: 'botgames'});	
-        socket.emit("quitroom", {room: "main"});
+	// socket.emit('joinroom', {join: 'botgames'});
+	socket.emit('joinroom', {join: '20questions'});
 	socket.on("newuser", function(data) {
 	    users.push(data.username);
 	});
