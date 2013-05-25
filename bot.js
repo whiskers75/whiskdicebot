@@ -196,8 +196,10 @@ socket.on("connect", function() {
                 chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
             if (data.message.split(' ')[0] === "!20add" && data.room === "20questions") {
-		qlist += ' | ' + data.message.split(' ')[1] + ' | ';
-                chat('20questions', 'Added to list: ' + data.message.split(' ')[1], "000");
+                var tmp = data.message.split(' ');
+		tmp.shift();
+		qlist += ' "' + tmp + '" ';
+                chat('20questions', 'Added to list: ' + tmp, "000");
             }
 	    if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
