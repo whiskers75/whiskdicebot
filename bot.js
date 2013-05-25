@@ -178,12 +178,12 @@ socket.on("connect", function() {
 		qlist = '';
                 chat('main', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
                 chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
-		chat('20questions', '/bold ' + data.user + ': choose a word, and then start guessing! Game will start in 15 seconds...', '090');
+		chat('20questions', '/bold ' + data.user + ': choose a word! You have 30 seconds until the game starts.', '090');
 		qboss = data.user;
 		setTimeout(function() {
                     chat('20questions', '/bold Game started! Begin guessing!', '090');
 		    qgame = true;
-		}, 15000);
+		}, 30000);
             }
             if (data.message === "!hints" && data.room === "20questions" && qgame) {
                 var tmp = ("Hints: " + qlist).chunk(200);
@@ -192,7 +192,7 @@ socket.on("connect", function() {
 		});
 	    }
             if (data.message === "!help" && data.room === "20questions") {
-                chat('20questions', 'Commands: !newgame (start new game) | !hints (get hints) | !hint <one word hint> (add hint) | !winner <winner> (finish game, and announce winner) | !state (check state)', '090');
+                chat('20questions', 'Commands: !newgame (start new game) | !hints (get hints) | !(a)hint <hint> (add (anti)hint) | !winner <winner> (finish game, and announce winner) | !state (check state)', '090');
             }
             if (data.message === "!state" && data.room === "20questions") {
                 chat('20questions', 'Game on: ' + qgame + ' | Word master: ' + qboss, '090');
