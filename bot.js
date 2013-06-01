@@ -202,6 +202,11 @@ socket.on("connect", function() {
 		qboss = 'Game not in progress';
                 chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
             }
+            if (data.message.split(' ')[0] === "!reboot" && data.room === "20questions") {
+		socket.emit('quitroom', {room: '20questions'});
+		socket.emit('joinroom', {room: '20questions'});
+                chat('20questions', '/bold ✔ Relogged.', "505");
+            }
             if (data.message.split(' ')[0] === "!hint" && data.room === "20questions" && qgame && data.user === qboss) {
                 var tmp = data.message.split(' ');
 		tmp.shift();
@@ -280,7 +285,7 @@ socket.on("connect", function() {
 	    }
 	});
 	// socket.emit('joinroom', {join: 'botgames'});
-	socket.emit('joinroom', {join: '20questions'});
+	// socket.emit('joinroom', {join: '20questions'});
 	socket.on("newuser", function(data) {
 	    users.push(data.username);
 	});
