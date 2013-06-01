@@ -176,6 +176,7 @@ socket.on("connect", function() {
             }
             if (data.message.split(' ')[0] === "!newgame" && data.room === "20questions" && !qgame) {
 		qlist = '';
+		alist = '';
                 chat('20questions', '/bold New game of 20 Questions starting! Join #20questions to play!', "090");
 		chat('20questions', '/bold ' + data.user + ': choose a word! You have 30 seconds until the game starts.', '090');
 		qboss = data.user;
@@ -190,8 +191,14 @@ socket.on("connect", function() {
 		    chat('20questions', chunk, '090');
 		});
 	    }
+            if (data.message === "!ahints" && data.room === "20questions" && qgame) {
+                var tmp = ("Antihints: " + alist).chunk(200);
+                tmp.forEach(function(chunk) {
+                    chat('20questions', chunk, '505');
+                });
+            }
             if (data.message === "!help" && data.room === "20questions") {
-                chat('20questions', 'Commands: !newgame (start new game) | !hints (get hints) | !(a)hint <hint> (add (anti)hint) | !winner <winner> (finish game, and announce winner) | !state (check state)', '090');
+                chat('20questions', 'Commands: !newgame (start new game) | !(a)hints (get (anti)hints) | !(a)hint <hint> (add (anti)hint) | !winner <winner> (finish game, and announce winner) | !state (check state)', '090');
             }
             if (data.message === "!state" && data.room === "20questions") {
                 chat('20questions', 'Game on: ' + qgame + ' | Word master: ' + qboss, '090');
@@ -218,7 +225,7 @@ socket.on("connect", function() {
                 var tmp = data.message.split(' ');
                 tmp.shift();
                 var tmp = tmp.join(' ');
-                qlist += ' ✗ ' + tmp + ' | ';
+                alist += ' ✗ ' + tmp + ' | ';
                 chat('20questions', '✗ ' + tmp, "505");
             }
             if (data.message.split(' ')[0] === "!youtube") {
