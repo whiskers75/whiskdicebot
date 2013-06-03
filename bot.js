@@ -172,7 +172,8 @@ socket.on("connect", function() {
 		socket.emit('toprooms', {});
             }
             if (data.message === "!bots" && data.room === "botgames") {
-		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info.', "090");
+		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info. Creator: whiskers75', "090");
+                chat('botgames', 'Tifa (#seventhheaven - moved here): A bot which spins a Lucky 7 spinner. *help for info. Creator: Box', "090");
             }
             if (data.message.split(' ')[0] === "!newgame" && data.room === "20questions" && !qgame) {
 		qlist = '';
