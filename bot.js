@@ -29,6 +29,7 @@ var reconnectTimeout = setTimeout(function() {
 }, 5000);
 socket.on("connect", function() {
     console.log('Connected');
+    clearTimeout(reconnectTimeout);
     socket.on("message", function(msg) {
 	console.log('SERVER MESSAGE: ' + msg.message);
 	if (msg === "You have been banned.") {
