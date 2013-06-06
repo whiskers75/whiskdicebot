@@ -22,7 +22,11 @@ var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
 var socket = io.connect("http://192.155.86.153:8888/");
-console.log('Connecting');
+console.log('Connecting...');
+var reconnectTimeout = setTimeout(function() {
+    console.log('Lagged out, rebooting');
+    process.exit(1)
+}, 5000);
 socket.on("connect", function() {
     console.log('Connected');
     socket.on("message", function(msg) {
