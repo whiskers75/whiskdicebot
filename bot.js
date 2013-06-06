@@ -69,25 +69,25 @@ socket.on("connect", function() {
 		    // yay
 		    chance = message;
 		    payout = Number((edge / (message / 100)).toFixed(2));
-                    chat('botgames', data.user + ': You selected a ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
+                    //chat('botgames', data.user + ': You selected a ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
 		}
 		else {
 		    chance = 60;
                     payout = Number((edge / (chance / 100)).toFixed(2));
-                    chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
+                    //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
                 if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
 		    random.getRandomInt(1, 100, function(err, rand) {
 			if (rand < (chance + 1)) {
 			    var totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout).toFixed(2));
                             var won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
-			    chat('botgames', data.user + ': You won ' + won + ' mBTC! (rolled ' + rand + ", required under " + (chance + 1) + ')', "090");
+			    chat('botgames', data.user + ': You won ' + won + ' mBTC! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + " < " + (chance + 1) + ')', "090");
                             chat('botgames', '!; win ' + data.user + ' ' + won, "000");
 			    lastWinner = data.user;
                             tip({user: data.user, room: 'botgames', tip: totip, message: 'You win!'});
 			}
 			else {
-chat('botgames', data.user + ': Not a winner, sorry! (rolled ' + rand + ', required under ' + (chance + 1) + ')', "505");
+			    chat('botgames', data.user + ': Not a winner, sorry! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + ' < ' + (chance + 1) + ')', "505");
                             chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
 			       chat('botgames', lastWinner + ': You won this payment!', "090");
