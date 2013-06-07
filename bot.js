@@ -86,13 +86,13 @@ socket.on("connect", function() {
 			if (rand < (chance + 1)) {
 			    var totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout).toFixed(2));
                             var won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
-			    chat('botgames', data.user + ': You won ' + won + ' mBTC! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + " < " + (chance + 1) + ')', "090");
+                            chat('botgames', '✔ ' + data.user + ' won ' + won + ' mBTC! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + " < " + (chance + 1) + ')', "090");
                             chat('botgames', '!; win ' + data.user + ' ' + won, "000");
 			    lastWinner = data.user;
                             tip({user: data.user, room: 'botgames', tip: totip, message: 'You win!'});
 			}
 			else {
-			    chat('botgames', data.user + ': Not a winner, sorry! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + ' < ' + (chance + 1) + ')', "505");
+                            chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + 'mBTC! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + ' < ' + (chance + 1) + ')', "e00");
                             chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
 			       chat('botgames', lastWinner + ': You won this payment!', "090");
@@ -111,22 +111,22 @@ socket.on("connect", function() {
 		}
 		else {
                     if ((balance < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-                        chat('botgames', '/bold Bet exceeds what the bot can pay!', "505");
+                        chat('botgames', '/bold Bet exceeds what the bot can pay!', "e00");
                         tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Exceeds balance!'});
 		    }
                     else {
-			chat('botgames', '/bold Game not enabled!', "505");
+			chat('botgames', '/bold Game not enabled!', "e00");
 		    }
 		}
             }
             if (data.message === "!start" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-		chat('botgames', '/bold Initializing WhiskDice game (!help for info)', "505");
+		chat('botgames', '/bold Initializing WhiskDice game (!help for info)', "e00");
 		socket.emit("getbalance", {});
 		started = true;
 		
             }
             if (data.message === "!stop" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-		chat('botgames', '/bold Stopping WhiskDice game (!help for info)', "505");
+		chat('botgames', '/bold Stopping WhiskDice game (!help for info)', "e00");
 		socket.emit("getbalance", {});
 		started = false;
 		
@@ -135,7 +135,7 @@ socket.on("connect", function() {
                 chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | !help for info', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/bold Shutting down bot, no more bets please!', "505");
+                chat('botgames', '/bold Shutting down bot, no more bets please!', "e00");
 		shutdown = true;
             }
             if (data.message.substring(0, 4) === "!set" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
@@ -145,14 +145,14 @@ socket.on("connect", function() {
 		    oldpayout = newOpts[2];
 		    chance = newOpts[1];
 		    payout = newOpts[2];
-                    chat('botgames', '/bold CHANGING PAYOUT/CHANCE! New chance: ' + chance + '% | New payout: ' + payout + 'x' , "505");
+                    chat('botgames', '/bold CHANGING PAYOUT/CHANCE! New chance: ' + chance + '% | New payout: ' + payout + 'x' , "e00");
 		}
 	    }
             if (data.message.substring(0, 5) === "!kick" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 var newOpts = data.message.split(' ');
 		if (newOpts[1]) {
                     socket.emit("kick", {action: "kick", room: 'botgames', user: newOpts[1]});
-		    chat('botgames', '/bold Kicked ' + newOpts[1], "505");
+		    chat('botgames', '/bold Kicked ' + newOpts[1], "e00");
 		}
             }
             if (data.message.substring(0, 7) === "!unkick" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
@@ -200,7 +200,7 @@ socket.on("connect", function() {
             if (data.message === "!ahints" && data.room === "20questions" && qgame) {
                 var tmp = ("Antihints: " + alist).chunk(200);
                 tmp.forEach(function(chunk) {
-                    chat('20questions', chunk, '505');
+                    chat('20questions', chunk, 'e00');
                 });
             }
             if (data.message === "!help" && data.room === "20questions") {
@@ -213,12 +213,12 @@ socket.on("connect", function() {
                 qlist = '';
 		qgame = false;
 		qboss = 'Game not in progress';
-                chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "505");
+                chat('20questions', '/bold The game of 20 Questions has ended! Winner: ' + data.message.split(' ')[1], "e00");
             }
             if (data.message.split(' ')[0] === "!reboot" && data.room === "20questions") {
 		socket.emit('quitroom', {room: '20questions'});
 		socket.emit('joinroom', {room: '20questions'});
-                chat('20questions', '/bold ✔ Relogged.', "505");
+                chat('20questions', '/bold ✔ Relogged.', "e00");
             }
             if (data.message.split(' ')[0] === "!hint" && data.room === "20questions" && qgame && data.user === qboss) {
                 var tmp = data.message.split(' ');
@@ -232,7 +232,7 @@ socket.on("connect", function() {
                 tmp.shift();
                 var tmp = tmp.join(' ');
                 alist += ' ✗ ' + tmp + ' | ';
-                chat('20questions', '✗ ' + tmp, "505");
+                chat('20questions', '✗ ' + tmp, "e00");
             }
             if (data.message.split(' ')[0] === "!youtube") {
                 youtube.feeds.videos(
@@ -259,7 +259,7 @@ socket.on("connect", function() {
 		    }, 2000); // Wait for getbalance
 		}
 		else {
-                    chat('botgames', data.user + ': Game disabled. Don\'t bet!', "505");
+                    chat('botgames', data.user + ': Game disabled. Don\'t bet!', "e00");
 		}
 		
             }
@@ -278,7 +278,7 @@ socket.on("connect", function() {
         }
         console.log('NEW BALANCE: ' + balance);
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
-        //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "505");
+        //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "e00");
 	if (balance >= 15.1) {
 	    tippedProfit = false;
 	    setTimeout(function() {
@@ -312,7 +312,7 @@ socket.on("connect", function() {
 	}, 3000); // Match the setTimeout for the chat engine
     });
     socket.on('disconnect', function() {
-	chat('botgames', 'CONNECTION FAILURE. REBOOTING!', "505");
+	chat('botgames', 'CONNECTION FAILURE. REBOOTING!', "e00");
 	process.exit(1);
     });
     socket.on('toprooms', function(data) {
@@ -324,12 +324,12 @@ socket.on("connect", function() {
 	    }
 	});
 	if (!foundOwnRoom) {
-            chat('botgames', 'Not on the top rooms list! :(', '505');
+            chat('botgames', 'Not on the top rooms list! :(', 'e00');
 	}
     });
     
     process.on('SIGTERM', function() {
-        chat('botgames', '/bold Shutting down/rebooting. No more bets please.', "505");
+        chat('botgames', '/bold Shutting down/rebooting. No more bets please.', "e00");
 	shutdown = true;
     });
 });
