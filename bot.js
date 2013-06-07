@@ -26,7 +26,7 @@ console.log('Connecting...');
 var reconnectTimeout = setTimeout(function() {
     console.log('Lagged out, rebooting');
     process.exit(1)
-}, 5000);
+}, 10000);
 socket.on("connect", function() {
     console.log('Connected');
     clearTimeout(reconnectTimeout);
