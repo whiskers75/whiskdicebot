@@ -37,6 +37,7 @@ socket.on("connect", function() {
 	    process.exit(1);
 	}
     });
+	
     function yell(type,code,string){
         chat("botgames", "RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string, "e00");
     }
@@ -178,6 +179,11 @@ socket.on("connect", function() {
             }
             if (data.message === "!lastwinner" && data.room === "botgames") {
 		chat('botgames', 'Last winner: ' + lastWinner, "090");
+            }
+            if (data.message === "!quota" && data.room === "botgames") {
+                random.checkQuota(function(quota) {
+                    chat("botgames", "/bold RANDOM.ORG Bits Remaining: " + quota, "090");
+                }, {}, yell);
             }
             if (data.message.substr(0, 6) === "!users" && data.room === "botgames") {
 		var toproom = data.message.substr(7, data.message.length);
