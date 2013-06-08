@@ -84,7 +84,7 @@ socket.on("connect", function() {
                     payout = Number((edge / (chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
-                if (started === true && (1.1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout) && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
+                if (started === true && (1.1 > Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
 		    random.generateIntegers(function(integ) {
 			var rand = integ[0][0];
 			if (rand < (chance + 1)) {
