@@ -119,9 +119,7 @@ socket.on("connect", function() {
                         tip({user: data.user, room: 'botgames', tip: String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.98), message: 'Exceeds balance!'});
 		    }
                     else {
-			else {
-			    chat('botgames', '/bold Game not enabled!', "e00");
-			}
+			chat('botgames', '/bold Game not enabled!', "e00");
 		    }
 		}
             }
