@@ -12,7 +12,7 @@ var youtube = require('youtube-feeds');
 var users = [];
 var chatBuffer = [];
 var chance = 60;
-var edge = 0.97; // EV + 2% tip fee
+var edge = 0.85; // EV + 2% tip fee
 var payout = 1.4;
 var qlist = "";
 var qgame = false;
@@ -81,7 +81,7 @@ socket.on("connect", function() {
                     payout = Number((edge / (chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
-                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
+                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout) && (5 > (data.message.substring(58, data.message.indexOf('mBTC') - 1))) {
 		    random.getRandomInt(1, 100, function(err, rand) {
 			if (rand < (chance + 1)) {
 			    var totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout).toFixed(2));
@@ -111,7 +111,7 @@ socket.on("connect", function() {
 		}
 		else {
                     if ((balance < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-                        chat('botgames', '/bold Bet exceeds what the bot can pay!', "e00");
+                        chat('botgames', '/bold Bet exceeds what the bot can pay! Max bet: 5 mBTC', "e00");
                         tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Exceeds balance!'});
 		    }
                     else {
@@ -329,7 +329,7 @@ socket.on("connect", function() {
     });
     
     process.on('SIGTERM', function() {
-        chat('botgames', '/bold Shutting down/rebooting. No more bets please.', "e00");
+        chat('botgames', '/bold Bot powering off. No more bets until the bot is started.', "e00");
 	shutdown = true;
     });
 });
