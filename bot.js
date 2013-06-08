@@ -247,11 +247,11 @@ socket.on("connect", function() {
                 );
             }
             if (data.message === "!help" && data.room === "botgames") {
-		chat('botgames', data.user + ': This is a SatoshiDice clone, for CoinChat!', "090");
-		chat('botgames', data.user + ': Commands: !state, !users, !bots, !lastwinner', "090");
-                chat('botgames', data.user + ': To use: /tip WhiskDiceBot (amount) BOT (win percentage)%', "090");
-                chat('botgames', data.user + ': Percentage can be anything from 1% to 75%', "090");
-                chat('botgames', data.user + ': Or go to go.cur.lv/whiskchat and use the /bet command. (/bet (amount) percentage%)', "090");
+		chat('botgames', 'This is a SatoshiDice clone, for CoinChat!', "090");
+		chat('botgames', 'Commands: !state, !users, !bots, !lastwinner', "090");
+                chat('botgames', 'To bet, tip this bot!', "090");
+                chat('botgames', 'http://whiskers75.github.io/whiskchat/index.html provides a /bet command, for betting with custom percentages. (/bet (amount) percentage%)', "090");
+		chat('botgames', 'Power users: /tip WhiskDiceBot *amount* BOT *percentage - 1% to 75%* bets with a custom percentage.', '090');
 		socket.emit("getbalance", {});
 		
             }
@@ -287,7 +287,7 @@ socket.on("connect", function() {
 	    tippedProfit = false;
 	    setTimeout(function() {
 		if (!tippedProfit && balance >= 20.1) {
-		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15, message: 'Tipping profit!'});
+		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 20, message: 'Tipping profit!'});
 		    tippedProfit = true;
 		}
 	    }, 30000);
