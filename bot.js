@@ -136,7 +136,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | !help for info', "000");
+                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | THE ONLY TRUE RANDOM DICE BOT! USES RANDOM.ORG! | !help for info', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "e00");
