@@ -12,7 +12,7 @@ var youtube = require('youtube-feeds');
 var users = [];
 var chatBuffer = [];
 var chance = 60;
-var edge = 0.85; // EV + 2% tip fee
+var edge = 0.97; // EV + 2% tip fee
 var payout = 1.4;
 var qlist = "";
 var qgame = false;
@@ -115,14 +115,10 @@ socket.on("connect", function() {
 		}
 		else {
                     if ((balance < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-                        chat('botgames', '/bold Bet exceeds what the bot can pay!', "e00");
-                        tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Exceeds balance!'});
+                        chat('botgames', '/bold Bet exceeds what the bot can pay! Returning 98% (tipping fees)', "e00");
+                        tip({user: data.user, room: 'botgames', tip: String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.98), message: 'Exceeds balance!'});
 		    }
                     else {
-                        if ((1.1 < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-                            chat('botgames', '/bold Overwagered! Max bet 1 mBTC!', "e00");
-                            tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Overwagered!'}); 
-			}
 			else {
 			    chat('botgames', '/bold Game not enabled!', "e00");
 			}
@@ -142,7 +138,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | !help for info', "000");
+                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | !help for info', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "e00");
@@ -265,7 +261,7 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 		if (started) {
 		    setTimeout(function() {
-                        chat('botgames', data.user + ': Game enabled! Balance: ' + balance.toFixed(2) + ' | House edge: ' + ((1 - edge) * 100).toFixed(2) + '%', "090");
+                        chat('botgames', data.user + ': Game enabled! Balance: ' + balance.toFixed(2) + ' | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '%', "090");
 		    }, 2000); // Wait for getbalance
 		}
 		else {
