@@ -7,7 +7,7 @@ String.prototype.chunk = function(size) {
 }
 var io = require("socket.io-client");
 var started = false;
-var random = require("secure_random");
+var random = require("random");
 var youtube = require('youtube-feeds');
 var users = [];
 var chatBuffer = [];
@@ -37,6 +37,9 @@ socket.on("connect", function() {
 	    process.exit(1);
 	}
     });
+    function yell(type,code,string){
+        chat("botgames", "RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string, "e00");
+    }
     function chat(room, msg, color) {
 	chatBuffer.push({room: room, message: msg, color: color});
     }
@@ -81,8 +84,9 @@ socket.on("connect", function() {
                     payout = Number((edge / (chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
-                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-		    random.getRandomInt(1, 100, function(err, rand) {
+                if (started === true && (1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout) && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
+		    random.generateIntegers(function(integ) {
+			var rand = integ[0][0];
 			if (rand < (chance + 1)) {
 			    var totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout).toFixed(2));
                             var won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
@@ -92,7 +96,7 @@ socket.on("connect", function() {
                             tip({user: data.user, room: 'botgames', tip: totip, message: 'You win!'});
 			}
 			else {
-                            chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + 'mBTC! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + ' < ' + (chance + 1) + ')', "e00");
+                            chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + chance + '% chance, ' + payout + 'x payout: ' + rand + ' < ' + (chance + 1) + ')', "e00");
                             chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
 			       chat('botgames', lastWinner + ': You won this payment!', "090");
@@ -104,14 +108,14 @@ socket.on("connect", function() {
 			}
                         chance = oldchance;
                         payout = oldpayout;
-		    });
+		    }, {secure: true, num: 1, min: 1, max: 100}, yell);
 		    
                     socket.emit("getbalance", {});
 		    
 		}
 		else {
                     if ((balance < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-                        chat('botgames', '/bold Bet exceeds what the bot can pay!', "e00");
+                        chat('botgames', '/bold Bet exceeds what the bot can pay! Max bet: 1 mBTC', "e00");
                         tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Exceeds balance!'});
 		    }
                     else {
@@ -279,10 +283,10 @@ socket.on("connect", function() {
         console.log('NEW BALANCE: ' + balance);
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
         //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "e00");
-	if (balance >= 15.1) {
+	if (balance >= 20.1) {
 	    tippedProfit = false;
 	    setTimeout(function() {
-		if (!tippedProfit && balance >= 15.1) {
+		if (!tippedProfit && balance >= 20.1) {
 		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 15, message: 'Tipping profit!'});
 		    tippedProfit = true;
 		}
