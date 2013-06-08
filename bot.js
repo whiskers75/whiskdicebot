@@ -84,7 +84,7 @@ socket.on("connect", function() {
                     payout = Number((edge / (chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
-                if (started === true && (1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout) && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
+                if (started === true && (1.1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout) && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
 		    random.generateIntegers(function(integ) {
 			var rand = integ[0][0];
 			if (rand < (chance + 1)) {
@@ -115,11 +115,17 @@ socket.on("connect", function() {
 		}
 		else {
                     if ((balance < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
-                        chat('botgames', '/bold Bet exceeds what the bot can pay! Max bet: 1 mBTC', "e00");
+                        chat('botgames', '/bold Bet exceeds what the bot can pay!', "e00");
                         tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Exceeds balance!'});
 		    }
                     else {
-			chat('botgames', '/bold Game not enabled!', "e00");
+                        if ((1.1 < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
+                            chat('botgames', '/bold Overwagered! Max bet 1 mBTC!', "e00");
+                            tip({user: data.user, room: 'botgames', tip: String(data.message.substring(58, data.message.indexOf('mBTC') - 1)), message: 'Overwagered!'}); 
+			}
+			else {
+			    chat('botgames', '/bold Game not enabled!', "e00");
+			}
 		    }
 		}
             }
