@@ -268,7 +268,7 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 		if (started) {
 		    setTimeout(function() {
-                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + ' mBTC | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '%', "090");
+                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + '/20 mBTC | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '%', "090");
 		    }, 2000); // Wait for getbalance
 		}
 		else {
