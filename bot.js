@@ -37,7 +37,7 @@ socket.on("connect", function() {
 	    process.exit(1);
 	}
     });
-	
+    
     function yell(type,code,string){
         chat("botgames", "RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string, "e00");
     }
@@ -268,11 +268,11 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 		if (started) {
 		    setTimeout(function() {
-                        chat('botgames', data.user + ': Game enabled! Balance: ' + balance.toFixed(2) + ' | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '%', "090");
+                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + ' mBTC | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '%', "090");
 		    }, 2000); // Wait for getbalance
 		}
 		else {
-                    chat('botgames', data.user + ': Game disabled. Don\'t bet!', "e00");
+                    chat('botgames', '/bold Game disabled. Don\'t bet!', "e00");
 		}
 		
             }
