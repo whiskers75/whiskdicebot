@@ -76,7 +76,7 @@ socket.on("connect", function() {
                 data.tipmessage = Number(data.message.substring(data.message.indexOf('message: BOT ') + 12, data.message.indexOf('%) !')));
 		if (data.tipmessage > 0 && data.tipmessage < 76) {
 		    // yay
-		    data.chance = message;
+		    data.chance = data.tipmessage;
 		    data.payout = Number((edge / (message / 100)).toFixed(2));
                     //chat('botgames', data.user + ': You selected a ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
 		}
