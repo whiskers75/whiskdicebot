@@ -100,7 +100,7 @@ socket.on("connect", function() {
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
 			}
 			else {
-                            if (data.rand === 100 && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 10) {
+                            if (data.rand === 100 && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 10)) {
                                 data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 10).toFixed(2));
                                 data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * 10) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
                                 chat('botgames', '/bold ✔ ' + data.user + ' won THE 100 ROLL JACKPOT OF: ' + data.won + ' mBTC! (10x your bet)', "090");
