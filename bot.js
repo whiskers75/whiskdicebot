@@ -77,12 +77,12 @@ socket.on("connect", function() {
 		if (data.tipmessage > 0 && data.tipmessage < 76) {
 		    // yay
 		    data.chance = data.tipmessage;
-		    data.payout = Number((edge / (message / 100)).toFixed(2));
+		    data.payout = Number((edge / (data.tipmessage / 100)).toFixed(2));
                     //chat('botgames', data.user + ': You selected a ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
 		}
 		else {
 		    data.chance = 60;
-                    data.payout = Number((edge / (chance / 100)).toFixed(2));
+                    data.payout = Number((edge / (data.chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
 		if (data.message > 75) {
