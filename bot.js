@@ -88,7 +88,7 @@ socket.on("connect", function() {
 		if (data.message > 75) {
 		    chat('botgames', "The max bet is 75%. Betting 60%...", 'e00');
 		}
-                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
+                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout)) {
 		    random.generateIntegers(function(integ) {
 			data.rand = integ[0][0];
 			if (data.rand < (data.chance + 1)) {
@@ -100,6 +100,16 @@ socket.on("connect", function() {
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
 			}
 			else {
+                            if (data.rand === 100 && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 10) {
+                                data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 10).toFixed(2));
+                                data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * 10) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
+                                chat('botgames', '/bold ✔ ' + data.user + ' won THE 100 ROLL JACKPOT OF: ' + data.won + ' mBTC! (10x your bet)', "090");
+                                chat('main', '/bold ✔ ' + data.user + ' won THE 100 ROLL JACKPOT OF: ' + data.won + ' mBTC! (10x the original bet!) Come play at #botgames now!', "090");
+                                chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
+                                lastWinner = data.user;
+                                tip({user: data.user, room: 'botgames', tip: data.totip, message: 'JACKPOT WINNER!!!'});
+			    }
+				else {
                             chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ')', "e00");
                             chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
@@ -109,6 +119,7 @@ socket.on("connect", function() {
 			       
 			       
 			       } */
+				    }
 			}
                         chance = oldchance;
                         payout = oldpayout;
