@@ -94,7 +94,7 @@ socket.on("connect", function() {
 			if (data.rand < (data.chance + 1)) {
 			    data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout).toFixed(2));
                             data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
-                            chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (chance + 1) + ')', "090");
+                            chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ')', "090");
                             chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
 			    lastWinner = data.user;
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
@@ -109,17 +109,17 @@ socket.on("connect", function() {
                                 lastWinner = data.user;
                                 tip({user: data.user, room: 'botgames', tip: data.totip, message: 'JACKPOT WINNER!!!'});
 			    }
-				else {
-                            chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ')', "e00");
-                            chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
-			    /* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
-			       chat('botgames', lastWinner + ': You won this payment!', "090");
-			       totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1));
-			       tip({user: lastWinner, room: 'botgames', tip: totip});
-			       
-			       
-			       } */
-				    }
+			    else {
+				chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ')', "e00");
+				chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
+				/* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
+				   chat('botgames', lastWinner + ': You won this payment!', "090");
+				   totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1));
+				   tip({user: lastWinner, room: 'botgames', tip: totip});
+				   
+				   
+				   } */
+			    }
 			}
                         chance = oldchance;
                         payout = oldpayout;
