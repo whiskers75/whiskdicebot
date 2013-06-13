@@ -129,13 +129,8 @@ socket.on("connect", function() {
 		    
 		}
 		else {
-                    if ((balance < (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * payout)) {
                         chat('botgames', '/bold Bet exceeds what the bot can pay! Returning 98% (tipping fees)', "e00");
                         tip({user: data.user, room: 'botgames', tip: String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.98), message: 'Exceeds balance!'});
-		    }
-                    else {
-			chat('botgames', '/bold Game not enabled!', "e00");
-		    }
 		}
             }
             if (data.message === "!start" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
