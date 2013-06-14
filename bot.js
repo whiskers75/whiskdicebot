@@ -88,7 +88,7 @@ socket.on("connect", function() {
 		if (data.message > 75) {
 		    chat('botgames', "The max bet is 75%. Betting 60%...", 'e00');
 		}
-                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1))) {
+                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)))) {
 		    random.generateIntegers(function(integ) {
 			data.rand = integ[0][0];
 			if (data.rand < (data.chance + 1)) {
