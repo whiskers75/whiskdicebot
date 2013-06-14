@@ -86,7 +86,7 @@ socket.on("connect", function() {
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
 		if (data.message > 75) {
-		    chat('botgames', "The max bet is 75%. Betting 60%...", 'e00');
+		    chat('botgames', "/bold The max bet is 75%. Betting 60%...", 'e00');
 		}
                 if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1.1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)))) {
 		    random.generateIntegers(function(integ) {
@@ -95,7 +95,9 @@ socket.on("connect", function() {
 			    data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout).toFixed(2));
                             data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
-                            chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance + ')', "090");
+			    setTimeout(function() {
+				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance + ')', "090");
+				}, 400); // Wait for balance update
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
 			    lastWinner = data.user;
                             
@@ -103,13 +105,12 @@ socket.on("connect", function() {
 			else {
 				chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
 				//chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
-				/* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
-				   chat('botgames', lastWinner + ': You won this payment!', "090");
-				   totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1));
-				   tip({user: lastWinner, room: 'botgames', tip: totip});
-				   
-				   
-				   } */
+			    if ((rand > Math.floor(chance * 1.2)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.19) && (balance > 17)) {
+                                totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
+                                    chat('botgames','✔ ' + lastWinner + ' won ' + totip + '! (last winner bonus!)', "090");
+				    
+				    tip({user: lastWinner, room: 'botgames', tip: totip});
+				}
 			}
                         chance = oldchance;
                         payout = oldpayout;
@@ -253,10 +254,9 @@ socket.on("connect", function() {
             }
             if (data.message === "!help" && data.room === "botgames") {
 		chat('botgames', 'This is a SatoshiDice clone, for CoinChat!', "090");
-		chat('botgames', 'Commands: !state, !users, !bots, !lastwinner', "090");
                 chat('botgames', 'To bet, tip this bot!', "090");
-                chat('botgames', 'http://whiskers75.github.io/whiskchat/index.html provides a /bet command, for betting with custom percentages. (/bet (amount) percentage%)', "090");
-		chat('botgames', 'Power users: /tip WhiskDiceBot *amount* BOT *percentage - 1% to 75%* bets with a custom percentage.', '090');
+                chat('botgames', 'http://whiskers75.github.io/whiskchat/index.html provides a /bet command, for betting with custom percentages. Power users: /tip WhiskDiceBot *amount* BOT *percentage - 1% to 75%* bets with a custom percentage.', "090");
+		chat('botgames', '', '090');
 		socket.emit("getbalance", {});
 		
             }
@@ -264,7 +264,7 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 		if (started) {
 		    setTimeout(function() {
-                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + '/20 mBTC | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '%', "090");
+                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + '/20 mBTC | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '% | Max bet: 1 mBTC', "090");
 		    }, 2000); // Wait for getbalance
 		}
 		else {
@@ -311,9 +311,11 @@ socket.on("connect", function() {
 	socket.on("newuser", function(data) {
 	    users.push(data.username);
 	});
-	setTimeout(function() {
+	setTimeout(function() {	    
+            socket.emit("getbalance", {});
+            socket.emit('getcolors', {});
             chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info)', "090");
-	    chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
+	    //chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
 	    socket.emit("getbalance", {});
             socket.emit('getcolors', {});
             chat('20questions', '/bold ✔ 20 Questions bot initialized! (!help for info)', "090");
@@ -328,10 +330,11 @@ socket.on("connect", function() {
     setTimeout(function() {
     socket.on('toprooms', function(data) {
 	var foundOwnRoom = false;
-	chat('botgames', '/bold Top rooms list:', '090');
 	data.list.forEach(function(room) {
+	    if (room.room == 'botgames') {
                 chat('botgames', '/bold #' + room.room + ': ' + room.users + ' people online!', '090');
 		foundOwnRoom = true;
+		}
 	});
     });
 	}, 3000);
