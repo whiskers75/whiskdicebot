@@ -88,16 +88,17 @@ socket.on("connect", function() {
 		if (data.message > 75) {
 		    chat('botgames', "The max bet is 75%. Betting 60%...", 'e00');
 		}
-                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)))) {
+                if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1.1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)))) {
 		    random.generateIntegers(function(integ) {
 			data.rand = integ[0][0];
 			if (data.rand < (data.chance + 1)) {
 			    data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout).toFixed(2));
                             data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
+                            tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
                             chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance + ')', "090");
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
 			    lastWinner = data.user;
-                            tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
+                            
 			}
 			else {
 				chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
@@ -321,20 +322,19 @@ socket.on("connect", function() {
     });
     socket.on('disconnect', function() {
 	chat('botgames', 'CONNECTION FAILURE. REBOOTING!', "e00");
+	console.log('CONNECTION FAILURE. REBOOTING!');
 	process.exit(1);
     });
+    setTimeout(function() {
     socket.on('toprooms', function(data) {
 	var foundOwnRoom = false;
+	chat('botgames', '/bold Top rooms list:', '090');
 	data.list.forEach(function(room) {
-	    if (room.room === toproom) {
-                chat('botgames', '/bold #' + toproom + ': ' + room.users + ' people online!', '090');
+                chat('botgames', '/bold #' + room.room + ': ' + room.users + ' people online!', '090');
 		foundOwnRoom = true;
-	    }
 	});
-	if (!foundOwnRoom) {
-            chat('botgames', 'Not on the top rooms list! :(', 'e00');
-	}
     });
+	}, 3000);
     
     process.on('SIGTERM', function() {
         chat('botgames', '/bold Bot powering off. No more bets until the bot is started.', "e00");
