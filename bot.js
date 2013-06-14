@@ -100,7 +100,6 @@ socket.on("connect", function() {
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
 			}
 			else {
-			    else {
 				chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
 				//chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 				/* if ((rand < Math.floor(chance * 1.5)) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.25)) {
