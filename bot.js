@@ -109,7 +109,6 @@ socket.on("connect", function() {
 				   
 				   
 				   } */
-			    }
 			}
                         chance = oldchance;
                         payout = oldpayout;
