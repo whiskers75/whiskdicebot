@@ -40,6 +40,7 @@ socket.on("connect", function() {
     
     function yell(type,code,string){
         chat("botgames", "RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string, "e00");
+        chat("botgames", "We are sorry for any inconvenience. If you lost money, taKe a screenshot and PM whiskers75.", "e00");
     }
     function chat(room, msg, color) {
 	chatBuffer.push({room: room, message: msg, color: color});
@@ -97,20 +98,20 @@ socket.on("connect", function() {
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
 			    setTimeout(function() {
 				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance + ')', "090");
-				}, 400); // Wait for balance update
+			    }, 400); // Wait for balance update
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
 			    lastWinner = data.user;
                             
 			}
 			else {
-				chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
-				//chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
+			    chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
+			    //chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
 			    if ((data.rand > 80) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.19) && (balance > 17)) {
                                 totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
-                                    chat('botgames','✔ ' + lastWinner + ' won ' + totip + '! (last winner bonus!)', "090");
-				    
-				    tip({user: lastWinner, room: 'botgames', tip: totip});
-				}
+                                chat('botgames','✔ ' + lastWinner + ' won ' + totip + '! (last winner bonus)', "090");
+				
+				tip({user: lastWinner, room: 'botgames', tip: totip});
+			    }
 			}
                         chance = oldchance;
                         payout = oldpayout;
@@ -264,7 +265,7 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 		if (started) {
 		    setTimeout(function() {
-                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + '/20 mBTC | House edge: ' + ((1 - edge) * 100 - 20).toFixed(2) + '% | Max bet: 1 mBTC', "090");
+                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + ' mBTC | House edge: ' + ((1 - edge) * 100 - 20).toFixed(2) + '% | Max bet: 1 mBTC', "090");
 		    }, 2000); // Wait for getbalance
 		}
 		else {
@@ -288,15 +289,6 @@ socket.on("connect", function() {
         console.log('NEW BALANCE: ' + balance);
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
         //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "e00");
-	if (balance >= 20.1) {
-	    tippedProfit = false;
-	    setTimeout(function() {
-		if (!tippedProfit && balance >= 20.1) {
-		    socket.emit('tip', {user: 'whiskers75', room: 'botgames', tip: balance - 20, message: 'Tipping profit!'});
-		    tippedProfit = true;
-		}
-	    }, 30000);
-	}
     });
     socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
     socket.on("loggedin", function(data) {
@@ -328,16 +320,16 @@ socket.on("connect", function() {
 	process.exit(1);
     });
     setTimeout(function() {
-    socket.on('toprooms', function(data) {
-	var foundOwnRoom = false;
-	data.list.forEach(function(room) {
-	    if (room.room == 'botgames') {
-                chat('botgames', '/bold #' + room.room + ': ' + room.users + ' people online!', '090');
-		foundOwnRoom = true;
+	socket.on('toprooms', function(data) {
+	    var foundOwnRoom = false;
+	    data.list.forEach(function(room) {
+		if (room.room == 'botgames') {
+                    chat('botgames', '/bold #' + room.room + ': ' + room.users + ' people online!', '090');
+		    foundOwnRoom = true;
 		}
+	    });
 	});
-    });
-	}, 3000);
+    }, 3000);
     
     process.on('SIGTERM', function() {
         chat('botgames', '/bold Bot powering off. No more bets until the bot is started.', "e00");
