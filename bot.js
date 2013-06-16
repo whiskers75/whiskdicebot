@@ -145,12 +145,28 @@ socket.on("connect", function() {
 				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance.toFixed(2) + ')', "090");
 			    }, 400); // Wait for balance update
 			    db.set('lastwinner', data.user, redis.print);
+			    db.get('winnings/' + data.user, function(err, res) {
+				if (err) {
+				    dbraise(err)
+				}
+				else {
+				    db.set('winnings/' + data.user, res + Number(data.won), redis.print)
+				}
+			    });
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
 			    lastWinner = data.user;
                             
 			}
 			else {
 			    chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance.toFixed(2) + ')', "e00");
+                            db.get('winnings/' + data.user, function(err, res) {
+                                if (err) {
+                                    dbraise(err)
+                                }
+                                else {
+                                    db.set('winnings/' + data.user, res + Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)), redis.print)
+                                }
+                            });
 			    //chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
                             db.get('lastwinner', function(err, lastWinner) {
                                 if (err) {
@@ -244,6 +260,21 @@ socket.on("connect", function() {
 		var toproom = data.message.substr(7, data.message.length);
 		socket.emit('toprooms', {});
             }
+	    if (data.message === "!history" && data.room === "botgames") {
+                db.get('winnings/' + data.user, function(err, res) {
+                    if(err) {
+                        dbraise(err);
+                    }
+                    else {
+                        if (res == null) {
+                            chat('botgames', 'No information available!', '090');
+                        }
+                        else {
+			    chat('botgames', 'Overall profit/loss for ' + data.user + ': ' + res, '090');
+                        }
+                    }
+		});
+	    }
             if (data.message === "!bots" && data.room === "botgames") {
 		db.get('!bots', function(err, res) {
 		    if(err) {
