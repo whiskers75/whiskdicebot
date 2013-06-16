@@ -130,7 +130,9 @@ socket.on("connect", function() {
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
 		if (data.tipmessage > 75) {
-		    chat('botgames', "/bold The max bet is 75%. Betting 60%...", 'e00');
+		    chat('botgames', "/bold The max percentage is 75%! Betting with 75%...", 'e00');
+		    data.chance = 75;
+                    data.payout = Number((edge / (data.chance / 100)).toFixed(2));
 		}
                 if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1.1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)))) {
 		    random.generateIntegers(function(integ) {
@@ -172,8 +174,15 @@ socket.on("connect", function() {
 		    
 		}
 		else {
-                    chat('botgames', '/bold Overwagered! Balance: ' + balance + ' mBTC, max bet 1 mBTC! Returning 80% (tipping fee of 20%): ' + String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.8) + ' mBTC.', "e00");
-                    tip({user: data.user, room: 'botgames', tip: String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.8), message: 'Exceeds balance!'});
+                    chat('botgames', '/bold There was an error with your bet! (max bet exceeded, bot balance low, game not enabled)', "e00");
+                    var paid = Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))
+		    if (paid < 0.33) {
+			totip = String(paid);
+		    }
+		    else {
+                        totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.8)
+		    }
+                    tip({user: data.user, room: 'botgames', tip: totip, message: 'Exceeds balance!'});
 		}
             }
             if (data.message === "!start" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
