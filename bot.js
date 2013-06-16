@@ -260,10 +260,15 @@ socket.on("connect", function() {
 			dbraise(err);
 		    }
 		    else {
+			if (res == null) {
+                            chat('botgames', 'No information available!', '090');
+			}
+			else {
 			var tmp = res.chunk(200);
 			tmp.forEach(function(chunk) {
 			    chat('botgames', chunk, '090');
 			});
+			    }
 		    }
 		});
             }
