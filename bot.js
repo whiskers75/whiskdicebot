@@ -270,7 +270,12 @@ socket.on("connect", function() {
                             chat('botgames', 'No information available!', '090');
                         }
                         else {
-			    chat('botgames', 'Overall profit/loss for ' + data.user + ': ' + res, '090');
+			    if (res > 0 || res == 0) {
+				chat('botgames', 'Overall profit for ' + data.user + ': ' + res, '090');
+			    }
+			    if (res < 0) {
+                                chat('botgames', 'Overall loss for ' + data.user + ': ' + res, 'e00');
+			    }
                         }
                     }
 		});
@@ -358,9 +363,14 @@ socket.on("connect", function() {
             if (data.message === "!help" && data.room === "botgames") {
                 chat('botgames', 'To play WhiskDice (SatoshiDice), check !state, then tip this bot!', "090");
                 chat('botgames', 'To bet with custom payouts and chances, use the /bet command of the WhiskChat Client at http://whiskchat.pw (thanks for the domain!)', "090");
-		chat('botgames', '', '090');
+		chat('botgames', 'Check !commands for more commands.', '090');
 		socket.emit("getbalance", {});
 		
+            }
+            if (data.message === "!commands" && data.room === "botgames") {
+                chat('botgames', 'Commands: !help, !state, !history (check bet history), !bots (get info on running bots)', "090");
+                socket.emit("getbalance", {});
+                
             }
             if (data.message === "!state" && data.room === "botgames") {
                 socket.emit("getbalance", {});
