@@ -87,7 +87,7 @@ socket.on("connect", function() {
                     data.payout = Number((edge / (data.chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
-		if (data.message > 75) {
+		if (data.tipmessage > 75) {
 		    chat('botgames', "/bold The max bet is 75%. Betting 60%...", 'e00');
 		}
                 if (started === true && (balance > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (20 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)) * data.payout) && (1.1 > (data.message.substring(58, data.message.indexOf('mBTC') - 1)))) {
@@ -316,11 +316,18 @@ socket.on("connect", function() {
         var dbready = false;
         db.auth(process.env.whiskredispass, function(err, res) {
             if (err) {
-                chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00"); 
+                chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00");
+		process.exit(1);
             }
             else {
 		started = true;
-                chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info)', "090");
+		db.incr('startups', function(err, res) {
+		    if (err) {
+			dbraise(err)
+		    }
+		    else {
+			chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
+		    }
             }
         });
     });
@@ -340,7 +347,9 @@ socket.on("connect", function() {
 	    });
 	});
     }, 3000);
-    
+	function dbraise(err) {
+            chat("botgames", "/bold ✗ Error performing DB operation! " + err, "e00");
+	};
     process.on('SIGTERM', function() {
         chat('botgames', '/bold Bot powering off. No more bets until the bot is started.', "e00");
 	shutdown = true;
