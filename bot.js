@@ -155,7 +155,7 @@ socket.on("connect", function() {
                                     dbraise(err)
                                 }
                                 else {
-			    if ((data.rand > 80) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.19) && (balance > 17)) {
+			    if ((data.rand > 80) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.49) && (balance > 17)) {
                                 totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
                                 chat('botgames','✔ ' + lastWinner + ' won ' + totip + '! (last winner bonus)', "090");
 				
