@@ -13,6 +13,8 @@ var users = [];
 var chatBuffer = [];
 var redis = require('redis');
 var chance = 60;
+var db = redis.createClient(9891, 'squawfish.redistogo.com', {no_ready_check: true});
+var dbready = false;
 var edge = 0.79; // EV + 20% tip fee
 var payout = 1.4;
 var qlist = "";
@@ -51,8 +53,7 @@ socket.on("connect", function() {
         socket.emit('getcolors', {});
         chat('20questions', '/bold ✔ 20 Questions bot initialized! (!help for info)', "090");
         
-        var db = redis.createClient(9891, 'squawfish.redistogo.com', {no_ready_check: true});
-        var dbready = false;
+        
         db.auth(process.env.whiskredispass, function(err, res) {
             if (err) {
                 chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00");
@@ -381,7 +382,8 @@ socket.on("connect", function() {
 	shutdown = true;
     });
     process.on('uncaughtException', function(err) {
-        chat('botgames', '/bold UNCAUGHT EXCEPTION: ' + err, "e00");
+        chat('botgames', '/bold FATAL ERROR: ' + err, "e00");
+	throw err;
     });
 });
 socket.on('error', function(err) {
