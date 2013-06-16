@@ -164,7 +164,7 @@ socket.on("connect", function() {
                                     dbraise(err)
                                 }
                                 else {
-                                    db.set('winnings/' + data.user, res - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)), redis.print)
+                                    db.set('winnings/' + data.user, Number(res) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)), redis.print)
                                 }
                             });
 			    //chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
