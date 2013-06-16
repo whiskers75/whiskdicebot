@@ -30,6 +30,47 @@ var reconnectTimeout = setTimeout(function() {
 }, 10000);
 socket.on("connect", function() {
     console.log('Connected');
+    socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
+    socket.on("loggedin", function(data) {
+        var username = data.username;
+        socket.on("joinroom", function(data) {
+            if (data.room === "botgames") {
+                users = data.users;
+            }
+        });
+        // socket.emit('joinroom', {join: 'botgames'});
+        // socket.emit('joinroom', {join: '20questions'});
+        socket.on("newuser", function(data) {
+            users.push(data.username);
+        });  
+        socket.emit("getbalance", {});
+        socket.emit('getcolors', {});
+        
+        //chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
+        socket.emit("getbalance", {});
+        socket.emit('getcolors', {});
+        chat('20questions', '/bold ✔ 20 Questions bot initialized! (!help for info)', "090");
+        
+        var db = redis.createClient(9891, 'squawfish.redistogo.com', {no_ready_check: true});
+        var dbready = false;
+        db.auth(process.env.whiskredispass, function(err, res) {
+            if (err) {
+                chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00");
+                process.exit(1);
+            }
+            else {
+                started = true;
+                db.incr('startups', function(err, res) {
+                    if (err) {
+                        dbraise(err)
+                    }
+                    else {
+                        chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
+                    }
+                });
+            }
+        });
+    });
     clearTimeout(reconnectTimeout);
     socket.on("message", function(msg) {
 	console.log('SERVER MESSAGE: ' + msg.message);
@@ -315,47 +356,7 @@ socket.on("connect", function() {
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
         //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "e00");
     });
-    socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
-    socket.on("loggedin", function(data) {
-	var username = data.username;
-	socket.on("joinroom", function(data) {
-	    if (data.room === "botgames") {
-		users = data.users;
-	    }
-	});
-	// socket.emit('joinroom', {join: 'botgames'});
-	// socket.emit('joinroom', {join: '20questions'});
-	socket.on("newuser", function(data) {
-	    users.push(data.username);
-	});  
-        socket.emit("getbalance", {});
-        socket.emit('getcolors', {});
-        
-	//chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
-	socket.emit("getbalance", {});
-        socket.emit('getcolors', {});
-        chat('20questions', '/bold ✔ 20 Questions bot initialized! (!help for info)', "090");
-        
-        var db = redis.createClient(9891, 'squawfish.redistogo.com', {no_ready_check: true});
-        var dbready = false;
-        db.auth(process.env.whiskredispass, function(err, res) {
-            if (err) {
-                chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00");
-		process.exit(1);
-            }
-            else {
-		started = true;
-		db.incr('startups', function(err, res) {
-		    if (err) {
-			dbraise(err)
-		    }
-		    else {
-			chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
-		    }
-		});
-            }
-        });
-    });
+
     socket.on('disconnect', function() {
 	chat('botgames', 'CONNECTION FAILURE. REBOOTING!', "e00");
 	console.log('CONNECTION FAILURE. REBOOTING!');
