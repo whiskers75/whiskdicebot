@@ -125,7 +125,7 @@ socket.on("connect", function() {
                     //chat('botgames', data.user + ': You selected a ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
 		}
 		else {
-		    data.chance = 60;
+		    data.chance = 50;
                     data.payout = Number((edge / (data.chance / 100)).toFixed(2));
                     //chat('botgames', data.user + ': Using default: ' + chance + '% chance, with a ' + payout + 'x payout.', "090");
                 }
@@ -204,16 +204,6 @@ socket.on("connect", function() {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "e00");
 		shutdown = true;
             }
-            if (data.message.substring(0, 4) === "!set" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-		var newOpts = data.message.split(' ');
-		if (newOpts[1] > 0 && newOpts[2] > 0) {
-		    oldchance = newOpts[1];
-		    oldpayout = newOpts[2];
-		    chance = newOpts[1];
-		    payout = newOpts[2];
-                    chat('botgames', '/bold CHANGING PAYOUT/CHANCE! New chance: ' + chance + '% | New payout: ' + payout + 'x' , "e00");
-		}
-	    }
             if (data.message.substring(0, 5) === "!kick" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 var newOpts = data.message.split(' ');
 		if (newOpts[1]) {
@@ -335,9 +325,8 @@ socket.on("connect", function() {
                 );
             }
             if (data.message === "!help" && data.room === "botgames") {
-		chat('botgames', 'This is a SatoshiDice clone, for CoinChat!', "090");
-                chat('botgames', 'To bet, tip this bot!', "090");
-                chat('botgames', 'http://whiskers75.github.io/whiskchat/index.html provides a /bet command, for betting with custom percentages. Power users: /tip WhiskDiceBot *amount* BOT *percentage - 1% to 75%* bets with a custom percentage.', "090");
+                chat('botgames', 'To play WhiskDice (SatoshiDice), check !state, then tip this bot!', "090");
+                chat('botgames', 'To bet with custom payouts and chances, use the /bet command of the WhiskChat Client at http://whiskchat.pw (thanks for the domain!)', "090");
 		chat('botgames', '', '090');
 		socket.emit("getbalance", {});
 		
