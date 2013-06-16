@@ -142,7 +142,7 @@ socket.on("connect", function() {
                             data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
 			    setTimeout(function() {
-				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance + ')', "090");
+				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance.toFixed(2) + ')', "090");
 			    }, 400); // Wait for balance update
 			    db.set('lastwinner', data.user, redis.print);
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
@@ -150,7 +150,7 @@ socket.on("connect", function() {
                             
 			}
 			else {
-			    chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
+			    chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance.toFixed(2) + ')', "e00");
 			    //chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
                             db.get('lastwinner', function(err, lastWinner) {
                                 if (err) {
