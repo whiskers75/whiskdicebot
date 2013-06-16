@@ -100,6 +100,7 @@ socket.on("connect", function() {
 			    setTimeout(function() {
 				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance + ')', "090");
 			    }, 400); // Wait for balance update
+			    db.set('lastwinner', data.user, redis.print);
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
 			    lastWinner = data.user;
                             
@@ -107,13 +108,20 @@ socket.on("connect", function() {
 			else {
 			    chat('botgames', '✗ ' + data.user + ' lost ' + data.message.substring(58, data.message.indexOf('mBTC') - 1) + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + ' < ' + (data.chance + 1) + ', balance ' + balance + ')', "e00");
 			    //chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
+                            db.get('lastwinner', function(err, lastWinner) {
+                                if (err) {
+                                    dbraise(err)
+                                }
+                                else {
 			    if ((data.rand > 80) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.19) && (balance > 17)) {
                                 totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
                                 chat('botgames','✔ ' + lastWinner + ' won ' + totip + '! (last winner bonus)', "090");
 				
 				tip({user: lastWinner, room: 'botgames', tip: totip});
 			    }
-			}
+                                }
+                            });
+                        }
                         chance = oldchance;
                         payout = oldpayout;
 		    }, {secure: true, num: 1, min: 1, max: 100}, yell);
@@ -177,8 +185,15 @@ socket.on("connect", function() {
 		chat('botgames', 'Called \'getcolors\'.', "090");
             }
             if (data.message === "!lastwinner" && data.room === "botgames") {
-		chat('botgames', 'Last winner: ' + lastWinner, "090");
-            }
+		db.get('lastwinner', function(err, lastWinner) {
+		    if (err) {
+			dbraise(err)
+		    }
+		    else {
+			chat('botgames', 'Last winner: ' + lastWinner, "090");
+		    }
+		});
+	    }
             if (data.message === "!quota" && data.room === "botgames") {
                 random.checkQuota(function(quota) {
                     chat("botgames", "/bold RANDOM.ORG Bits Remaining: " + quota, "090");
@@ -189,8 +204,17 @@ socket.on("connect", function() {
 		socket.emit('toprooms', {});
             }
             if (data.message === "!bots" && data.room === "botgames") {
-		chat('botgames', 'Bots: | WhiskDiceBot (#botgames): A clone of SatoshiDice, with more advanced bet options. !help for info. Creator: whiskers75', "090");
-                chat('botgames', 'Tifa (#seventhheaven - moved here): A bot which spins a Lucky 7 spinner. *help for info. Creator: Box', "090");
+		db.get('!bots', function(err, res) {
+		    if(err) {
+			dbraise(err);
+		    }
+		    else {
+			var tmp = res.chunk(200);
+			tmp.forEach(function(chunk) {
+			    chat('botgames', chunk, '090');
+			});
+		    }
+		});
             }
             if (data.message.split(' ')[0] === "!newgame" && data.room === "20questions" && !qgame) {
 		qlist = '';
