@@ -11,6 +11,7 @@ var random = require("random");
 var youtube = require('youtube-feeds');
 var users = [];
 var chatBuffer = [];
+var redis = require('redis');
 var chance = 60;
 var edge = 0.79; // EV + 20% tip fee
 var payout = 1.4;
@@ -302,8 +303,7 @@ socket.on("connect", function() {
 	// socket.emit('joinroom', {join: '20questions'});
 	socket.on("newuser", function(data) {
 	    users.push(data.username);
-	});
-	setTimeout(function() {	    
+	});  
             socket.emit("getbalance", {});
             socket.emit('getcolors', {});
             chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info)', "090");
@@ -311,8 +311,17 @@ socket.on("connect", function() {
 	    socket.emit("getbalance", {});
             socket.emit('getcolors', {});
             chat('20questions', '/bold ✔ 20 Questions bot initialized! (!help for info)', "090");
-            started = true;
-	}, 3000); // Match the setTimeout for the chat engine
+            
+        var db = redis.createClient(9891, 'squawfish.redistogo.com', {no_ready_check: true});
+        
+        db.auth(process.env.whiskredispass, function(err, res) {
+            if (err) {
+                chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00"); 
+            }
+            else {
+                chat('botgames', '/bold ✔ Database connection successful!', "090"); 
+            }
+        });
     });
     socket.on('disconnect', function() {
 	chat('botgames', 'CONNECTION FAILURE. REBOOTING!', "e00");
