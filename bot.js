@@ -150,7 +150,7 @@ socket.on("connect", function() {
 				    dbraise(err)
 				}
 				else {
-				    db.set('winnings/' + data.user, res + Number(data.won), redis.print)
+				    db.set('winnings/' + data.user, Number(res) + Number(data.won), redis.print)
 				}
 			    });
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
