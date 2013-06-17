@@ -364,13 +364,13 @@ socket.on("connect", function() {
                 youtube.feeds.videos(
                     {q: data.message.split(' ').splice(0, 1).join(' '), key: process.env.YT_KEY},
                     function(err, res) {
-			chat('botgames', 'YouTube: ' + res.items[0].uploader + ': ' + res.items[0].title + ' - ' + res.items[0].player['default'], '090');
+			chat('botgames', 'YouTube: ' + res.items[1].uploader + ': ' + res.items[1].title + ' - ' + res.items[1].player['default'], '090');
 		    }
                 );
             }
             if (data.message === "!help" && data.room === "botgames") {
                 chat('botgames', 'To play WhiskDice (SatoshiDice), check !state, then tip this bot!', "090");
-                chat('botgames', 'How to tip: /tip WhiskDiceBot (amount) BOT (percentage, max 75%)', "090");
+                chat('botgames', 'How to tip: /tip WhiskDiceBot (amount) (percentage, max 75%)', "090");
                 chat('botgames', 'Check !commands for more commands. Also check out http://whiskers75.github.io/whiskchat - the WhiskChat client!', '090');
 		socket.emit("getbalance", {});
 		
