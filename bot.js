@@ -68,11 +68,23 @@ socket.on("connect", function() {
                     }
                     else {
                         chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
+			db.get('chanserv', function(err, res) {
+			    if (err) {
+				dbraise(err)
+			    }
+			    else {
+				var chanserv = JSON.parse(res);
+				chanserv.chans.forEach(function(chan) {
+				    socket.emit('joinroom', {room: chan});
+                                    chat(chan, '/bold ✔ ChanServ initialized! (total boots: ' + res + ')', "090");
+				});
+			    }
+			});
                     }
                 });
             }
         });
-    });
+    });c
     clearTimeout(reconnectTimeout);
     socket.on("message", function(msg) {
 	console.log('SERVER MESSAGE: ' + msg.message);
@@ -381,6 +393,7 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
                 
             }
+	    
             if (data.message === "!state" && data.room === "botgames") {
                 socket.emit("getbalance", {});
 		if (started) {
@@ -436,9 +449,8 @@ socket.on("connect", function() {
 	shutdown = true;
     });
     process.on('uncaughtException', function(err) {
-        chat('botgames', '/bold ✗ Fatal error! ' + err, "e00");
-        chat('botgames', '/bold ✗ Bot will now exit!', "e00");
-	throw err;
+        chat('botgames', '/bold ✗ Fatal error! ' + err + ' Shutting down!', "e00");
+	shutdown = true;
     });
 });
 socket.on('error', function(err) {
