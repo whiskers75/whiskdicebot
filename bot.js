@@ -68,23 +68,11 @@ socket.on("connect", function() {
                     }
                     else {
                         chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
-			db.get('chanserv', function(err, res) {
-			    if (err) {
-				dbraise(err)
-			    }
-			    else {
-				var chanserv = JSON.parse(res);
-				chanserv.chans.forEach(function(chan) {
-				    socket.emit('joinroom', {room: chan});
-                                    chat(chan, '/bold ✔ ChanServ initialized! (total boots: ' + res + ')', "090");
-				});
-			    }
-			});
                     }
                 });
             }
         });
-    });c
+    });
     clearTimeout(reconnectTimeout);
     socket.on("message", function(msg) {
 	console.log('SERVER MESSAGE: ' + msg.message);
