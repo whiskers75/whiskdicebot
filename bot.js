@@ -142,9 +142,7 @@ socket.on("connect", function() {
 			    data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout).toFixed(2));
                             data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
-			    setTimeout(function() {
-				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ', balance ' + balance.toFixed(2) + ')', "090");
-			    }, 400); // Wait for balance update
+				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ')', "090");
 			    db.set('lastwinner', data.user, redis.print);
 			    db.get('winnings/' + data.user, function(err, res) {
 				if (err) {
@@ -176,7 +174,7 @@ socket.on("connect", function() {
                                 else {
 				    if ((data.rand > 80) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.49) && (balance > 17)) {
 					totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
-					chat('botgames','✔ ' + lastWinner + ' won ' + totip + '! (last winner bonus)', "090");
+					chat('botgames','✔ ' + lastWinner + ' won ' + totip + ' mBTC! (last winner bonus)', "090");
 					
 					tip({user: lastWinner, room: 'botgames', tip: totip});
                                         db.get('winnings/' + data.user, function(err, res) {
