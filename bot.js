@@ -15,7 +15,7 @@ var redis = require('redis');
 var chance = 60;
 var db = redis.createClient(9891, 'squawfish.redistogo.com', {no_ready_check: true});
 var dbready = false;
-var edge = 0.79; // EV + 20% tip fee
+var edge = 0.97; // EV + 2% tip fee
 var payout = 1.4;
 var qlist = "";
 var qgame = false;
@@ -221,7 +221,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100 - 20).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | THE ONLY TRUE RANDOM DICE BOT! USES RANDOM.ORG! | !help for info', "000");
+                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | THE ONLY TRUE RANDOM DICE BOT! USES RANDOM.ORG! | !help for info', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "e00");
@@ -384,7 +384,7 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 		if (started) {
 		    setTimeout(function() {
-                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + ' mBTC | House edge: ' + ((1 - edge) * 100 - 20).toFixed(2) + '% | Max bet: 1 mBTC | Max percentage: 75%', "090");
+                        chat('botgames', '/bold Game enabled! Balance: ' + balance.toFixed(2) + ' mBTC | House edge: ' + ((1 - edge) * 100 - 2).toFixed(2) + '% | Max bet: 1 mBTC | Max percentage: 75%', "090");
 		    }, 2000); // Wait for getbalance
 		}
 		else {
