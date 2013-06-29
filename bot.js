@@ -34,14 +34,15 @@ socket.on("connect", function() {
     console.log('Connected');
     socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
     socket.on("loggedin", function(data) {
+        console.log('Logged in to CoinChat');
         var username = data.username;
         socket.on("joinroom", function(data) {
             if (data.room === "botgames") {
                 users = data.users;
             }
         });
-        // socket.emit('joinroom', {join: 'botgames'});
-        // socket.emit('joinroom', {join: '20questions'});
+        socket.emit('joinroom', {join: 'botgames'});
+        socket.emit('joinroom', {join: '20questions'});
         socket.on("newuser", function(data) {
             users.push(data.username);
         });  
