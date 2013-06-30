@@ -228,8 +228,6 @@ socket.on("connect", function() {
             if (data.message === "!rules" && data.room === "main") {
                 chat('main', data.user + ': CoinChat rules: http://krishna.bz/help.html', "090");
                 socket.emit("getbalance", {});
-                started = false;
-                
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/topic #botgames - SatoshiDice by whiskers75 | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | http://whiskers75.github.io/coinchat-bot/ for help and a tutorial! | !help for info.', "000");
