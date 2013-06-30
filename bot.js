@@ -281,10 +281,10 @@ socket.on("connect", function() {
                         }
                         else {
 			    if (res > 0 || res == 0) {
-				chat('botgames', 'Overall profit for ' + data.user + ': ' + res, '090');
+				chat('botgames', 'Overall profit for ' + data.user + ': ' + Number(res).toFixed(2), '090');
 			    }
 			    if (res < 0) {
-                                chat('botgames', 'Overall loss for ' + data.user + ': ' + res, 'e00');
+                                chat('botgames', 'Overall loss for ' + data.user + ': ' + Number(res).toFixed(2), 'e00');
 			    }
                         }
                     }
