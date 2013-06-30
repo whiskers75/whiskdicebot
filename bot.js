@@ -202,11 +202,11 @@ socket.on("connect", function() {
 		else {
                     chat('botgames', '/bold There was an error with your bet! (max bet exceeded, bot balance low, game not enabled)', "e00");
                     var paid = Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))
-		    if (paid < 0.33) {
+		    if (paid < 0.26) {
 			totip = String(paid);
 		    }
 		    else {
-                        totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.8)
+                        totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1)) * 0.98)
 		    }
                     tip({user: data.user, room: 'botgames', tip: totip, message: 'Exceeds balance!'});
 		}
