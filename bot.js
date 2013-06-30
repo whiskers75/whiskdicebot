@@ -150,7 +150,7 @@ socket.on("connect", function() {
 				}
 				else {
 				    db.set('winnings/' + data.user, Number(res) + Number(data.won), redis.print)
-                                    chat('botgames', '✔ ' + data.user + ': ' + (Number(res) + Number(data.won) + ' mBTC! (+ ' + data.won +  ' mBTC) [' + data.chance + '% ' + data.payout + 'x: ' + data.rand + " < " + (data.chance + 1) + ']', "090");
+                                    chat('botgames', '✔ ' + data.user + ': ' + Number(res) + Number(data.won) + ' mBTC! (+ ' + data.won +  ' mBTC) [' + data.chance + '% ' + data.payout + 'x: ' + data.rand + " < " + (data.chance + 1) + ']', "090");
 				}
 			    });
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
