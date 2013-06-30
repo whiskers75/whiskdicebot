@@ -224,7 +224,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!rules" && data.room === "main") {
-                chat('botgames', 'CoinChat rules: http://krishna.bz/help.html', "090");
+                chat('main', data.user + ': CoinChat rules: http://krishna.bz/help.html', "090");
                 socket.emit("getbalance", {});
                 started = false;
                 
