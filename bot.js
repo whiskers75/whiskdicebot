@@ -142,7 +142,7 @@ socket.on("connect", function() {
 			    data.totip = String(Number(data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout).toFixed(2));
                             data.won = String(Number((data.message.substring(58, data.message.indexOf('mBTC') - 1) * data.payout) - Number(data.message.substring(58, data.message.indexOf('mBTC') - 1))).toFixed(2));
                             tip({user: data.user, room: 'botgames', tip: data.totip, message: 'You win!'});
-				chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ')', "090");
+			    chat('botgames', '✔ ' + data.user + ' won ' + data.won + ' mBTC! (' + data.chance + '% chance, ' + data.payout + 'x payout: ' + data.rand + " < " + (data.chance + 1) + ')', "090");
 			    db.set('lastwinner', data.user, redis.print);
 			    db.get('winnings/' + data.user, function(err, res) {
 				if (err) {
@@ -221,7 +221,7 @@ socket.on("connect", function() {
 		
             }
             if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic The first & best SatoshiDice for CoinChat - refilled! | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | 1% to 75% - many chances of winning - you choose! | THE ONLY TRUE RANDOM DICE BOT! USES RANDOM.ORG! | !help for info', "000");
+                chat('botgames', '/topic #botgames - SatoshiDice by whiskers75 | ' + ((1 - edge) * 100 - 2).toFixed(2) + 'house edge | http://whiskers75.github.io/coinchat-bot/ for help and a tutorial! | !help for info.', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', '/bold Shutting down bot, no more bets please!', "e00");
@@ -370,7 +370,7 @@ socket.on("connect", function() {
             if (data.message === "!help" && data.room === "botgames") {
                 chat('botgames', 'To play WhiskDice (SatoshiDice), check !state, then tip this bot!', "090");
                 chat('botgames', 'How to tip: /tip WhiskDiceBot (amount) (percentage, max 75%)', "090");
-                chat('botgames', 'Check !commands for more commands. Also check out http://whiskers75.github.io/whiskchat - the WhiskChat client!', '090');
+                chat('botgames', 'http://whiskers75.github.io/coinchat-bot/ for more info. Also check out http://whiskers75.github.io/whiskchat - the WhiskChat client!', '090');
 		socket.emit("getbalance", {});
 		
             }
