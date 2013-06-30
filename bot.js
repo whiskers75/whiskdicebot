@@ -68,6 +68,7 @@ socket.on("connect", function() {
                     }
                     else {
                         chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
+			started = true;
                     }
                 });
             }
