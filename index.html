@@ -1,28 +1,80 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
   <head>
-    <title>whiskers75 CoinChat Mobile</title>
-    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
-    <link rel="apple-touch-icon" href="http://octodex.github.com/images/codercat.jpg"/>
-    <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/spacelab/bootstrap.min.css" rel="stylesheet">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.10/socket.io.min.js"></script>
-    <script>
-      var socket = io.connect("http://192.155.86.153:8888/");
-      socket.on('connect', function() {
-      document.getElementById("state").class = 'icon-ok'
-      });
-    </script>
-    <style>
-      .top-center{
-      margin: auto;
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      right: 0px;
-      }
-    </style>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>WhiskDiceBot by whiskers75</title>
   </head>
+
   <body>
-    <h3 class="top-center">CoinChat Mobile (by whiskers75)</h3> <i class="icon-off" id="state"></i>
+
+    <header>
+      <div class="container">
+        <h1>WhiskDiceBot</h1>
+        <h2>Forever open source.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/whiskers75/coinchat-bot/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/whiskers75/coinchat-bot/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/whiskers75/coinchat-bot" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h3>
+<a name="whiskdicebot" class="anchor" href="#whiskdicebot"><span class="octicon octicon-link"></span></a>WhiskDiceBot</h3>
+
+<h2>
+<a name="help-page" class="anchor" href="#help-page"><span class="octicon octicon-link"></span></a>Help page</h2>
+
+<p><strong>To bet:</strong></p>
+
+<p><em>Note: Check <code>!state</code> first. See commands for details.</em>
+Syntax:   </p>
+
+<pre><code>/tip WhiskDiceBot (amount) [percentage]
+</code></pre>
+
+<p>Note that percentages are limited from 1% to 75% to prevent draining, and the max bet is 1 mBTC.
+Examples:</p>
+
+<pre><code> /tip WhiskDiceBot 0.25
+
+ /tip WhiskDiceBot 0.25 60%
+</code></pre>
+
+<p>WhiskDiceBot also supports nice messages:</p>
+
+<pre><code> /tip WhiskDiceBot 0.25 Hm, I'll take a 75% please.
+</code></pre>
+
+<p>However percentages below 10% <strong>must</strong> be written like this:</p>
+
+<pre><code> /tip WhiskDiceBot 0.25 01%
+</code></pre>
+
+<p><strong>Commands</strong></p>
+
+<p>Before you bet, you should always check if the bot is up and running to avoid disappointment. Use the <code>!state</code> command.</p>
+
+<p>Want to check if you've made a profit? Use <code>!history</code>.</p>
+
+<p><strong>Extra Nice Features</strong></p>
+
+<ul>
+<li>If you are the last winner of a bet, and someone else's (or your!) bet loses, there is a chance of you winning half his/her bet as a bonus! </li>
+<li>There are other bots in #botgames! Check out <code>!bots</code> for info.</li>
+</ul>
+      </section>
+    </div>
+
+    
   </body>
 </html>
