@@ -150,7 +150,7 @@ socket.on("connect", function() {
 				}
 				else {
 				    db.set('winnings/' + data.user, Number(res) + (Number(data.won) * 0.98), redis.print)
-                                    chat('botgames', '✔ ' + data.user + ' has ' + (Number(res) + (Number(data.won) * 0.98)).toFixed(2) + ' mBTC! (+' + data.won +  ' mBTC) [' + data.chance + '%, ' + data.payout + 'x: ' + data.rand + " < " + (data.chance + 1) + ']', "090");
+                                    chat('botgames', '✔ ' + data.user + ' won ' + (data.won * 0.98) + ' mBTC! (' + (Number(res) + (Number(data.won) * 0.98)) +  ' mBTC) [' + data.chance + '%, ' + data.payout + 'x: ' + data.rand + " < " + (data.chance + 1) + ']', "090");
 				}
 			    });
                             //chat('botgames', '!; win ' + data.user + ' ' + data.won, "000");
@@ -166,7 +166,7 @@ socket.on("connect", function() {
                                 else {
                                     data.lost = Number(data.message.substring(58, data.message.indexOf('mBTC')));
 				    db.set('winnings/' + data.user, Number(res) - data.lost, redis.print);
-				    chat('botgames', '✗ ' + data.user + ' has ' + (Number(res) - Number(data.lost)).toFixed(2) + ' mBTC! (-' + data.lost + ' mBTC) [' + data.chance + '%, ' + data.payout + 'x: ' + data.rand + " < " + (data.chance + 1) + ']', "e00");
+                                    chat('botgames', '✗ ' + data.user + ' lost ' + data.lost + ' mBTC! (' + (Number(res) - data.lost) + ' mBTC) [' + data.chance + '%, ' + data.payout + 'x: ' + data.rand + " < " + (data.chance + 1) + ']', "e00");
 				}
                             });
 			    //chat('botgames', '!; loss ' + data.user + ' ' + data.message.substring(58, data.message.indexOf('mBTC') - 1), "000");
