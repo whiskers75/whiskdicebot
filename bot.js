@@ -175,9 +175,9 @@ socket.on("connect", function() {
                                     dbraise(err)
                                 }
                                 else {
-				    if ((data.rand > 80) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.49) && (balance > 17)) {
+				    if ((data.rand > 85) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.49) && (balance > 17)) {
 					totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
-					chat('botgames','✔ ' + lastWinner + ' won ' + totip + ' mBTC! (last winner bonus)', "090");
+					
 					
 					tip({user: lastWinner, room: 'botgames', tip: totip});
                                         db.get('winnings/' + data.user, function(err, res) {
@@ -185,7 +185,8 @@ socket.on("connect", function() {
                                                 dbraise(err)
                                             }
                                             else {
-                                                db.set('winnings/' + data.user, Number(res) + Number(totip), redis.print)
+                                                db.set('winnings/' + data.user, Number(res) + Number(totip * 0.98), redis.print)
+                                                chat('botgames','✔ ' + lastWinner + ' won ' + (totip * 0.98) + ' mBTC! (' ((Number(res) + Number(totip)) * 0.98).toFixed(2) + ') [last winner bonus]', "090");
                                             }
 					});
 				    }
