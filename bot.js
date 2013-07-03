@@ -25,16 +25,13 @@ var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
 var socket = io.connect("http://192.155.86.153:8888/");
-console.log('Connecting...');
-var reconnectTimeout = setTimeout(function() {
-    console.log('Lagged out, rebooting');
-    process.exit(1)
-}, 10000);
+console.log('[WDB] Initializing WhiskDiceBot!');
+console.log('[WDB] Connecting to CoinChat...');x
 socket.on("connect", function() {
-    console.log('Connected');
+    console.log('[WDB] Connected to CoinChat. Logging in...');
     socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
     socket.on("loggedin", function(data) {
-        console.log('Logged in to CoinChat');
+        console.log('[WDB] Logged in');
         var username = data.username;
         socket.on("joinroom", function(data) {
             if (data.room === "botgames") {
@@ -49,16 +46,13 @@ socket.on("connect", function() {
         socket.emit("getbalance", {});
         socket.emit('getcolors', {});
         
-        //chat('botgames', 'Betting is now enabled! Tip this bot to play.', "090");
         socket.emit("getbalance", {});
         socket.emit('getcolors', {});
-        chat('20questions', '/bold ✔ 20 Questions bot initialized! (!help for info)', "090");
-        
-        
         db.auth(process.env.whiskredispass, function(err, res) {
             if (err) {
+                console.log("[WDB] Error connecting to database! " + err);
                 chat("botgames", "/bold ✗ Error connecting to database! " + err, "e00");
-                process.exit(1);
+                shutdown = true;
             }
             else {
                 started = true;
@@ -67,8 +61,10 @@ socket.on("connect", function() {
                         dbraise(err)
                     }
                     else {
-                        chat('botgames', '/bold ✔ WhiskDiceBot initialized! (!help for info, total boots: ' + res + ')', "090");
+                        chat('botgames', '/bold ✔ WhiskDiceBot/betting initialized! (!help for info, total boots: ' + res + ')', "090");
+                        hat('20questions', '/bold ✔ WhiskDiceBot/20questions initialized! (!help for info, total boots: ' + res + ')', "090");
 			started = true;
+			console.log('[WDB] WhiskDiceBot initialized!');
                     }
                 });
             }
@@ -76,14 +72,11 @@ socket.on("connect", function() {
     });
     clearTimeout(reconnectTimeout);
     socket.on("message", function(msg) {
-	console.log('SERVER MESSAGE: ' + msg.message);
-	if (msg === "You have been banned.") {
-	    console.log('Error: Banned!');
-	    process.exit(1);
-	}
+	console.log('[CoinChat] ' + msg.message)
     });
     
     function yell(type,code,string){
+        console.log("[WDB] RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string);
         chat("botgames", "RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string, "e00");
         chat("botgames", "We are sorry for any inconvenience. If you lost money, take a screenshot and PM whiskers75.", "e00");
     }
@@ -108,7 +101,7 @@ socket.on("connect", function() {
 	}
 	else {
 	    if (shutdown) {
-		console.log('Shutting down...');
+		console.log('[WDB] Shutting down...');
 		process.exit(0);
 	    }
 	}
@@ -421,8 +414,9 @@ socket.on("connect", function() {
     
     socket.on('disconnect', function() {
         chat('botgames', '✗ WhiskDiceBot lost connection! Rebooting!', "e00");
-	console.log('CONNECTION FAILURE. REBOOTING!');
-	process.exit(1);
+	console.log('[WDB] Connection lost. Reconnecting...');
+	socket.disconnect();
+	socket.socket.connect();
     });
     setTimeout(function() {
 	socket.on('toprooms', function(data) {
@@ -436,15 +430,18 @@ socket.on("connect", function() {
 	});
     }, 3000);
     function dbraise(err) {
+        console.log("[WDB] Error performing DB operation! " + err);
         chat("botgames", "/bold ✗ Error performing DB operation! " + err, "e00");
         chat("botgames", "We are sorry for any inconvenience. If you lost money, take a screenshot and PM whiskers75.", "e00");
     };
     process.on('SIGTERM', function() {
+	console.log('[WDB] Recieved SIGTERM, shutting down...');
         chat('botgames', '/bold ✗ Bot powering off. No more bets until the bot is started.', "e00");
 	shutdown = true;
     });
     process.on('uncaughtException', function(err) {
-        chat('botgames', '/bold ✗ Fatal error! ' + err + ' Shutting down!', "e00");
+        console.log('[WDB] Fatal error! ' + err);
+        chat('botgames', '/bold ✗ Fatal error! ' + err + ' Quitting!', "e00");
 	shutdown = true;
     });
 });
