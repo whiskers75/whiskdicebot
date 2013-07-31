@@ -108,14 +108,14 @@ socket.on("connect", function() {
     function parseTip(data) {
 	if (data.target == 'WhiskDiceBot') {
 	    // We got a tip!
-            data.tipmessage = Number(data.message.substring(data.message.message.indexOf('%') - 3, data.message.message.indexOf('%')));
+            data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 3, data.message.indexOf('%')));
             if (data.tipmessage > 0 && data.tipmessage < 76) {
                 // Recognised valid percentage.
                 data.chance = data.tipmessage;
                 data.payout = Number((edge / (data.tipmessage / 100)).toFixed(2));
             }
             else {
-                data.tipmessage = Number(data.message.substring(data.message.message.indexOf('%') - 2, data.message.message.indexOf('%')));
+                data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 2, data.message.indexOf('%')));
                 if (data.tipmessage > 0 && data.tipmessage < 76) {
                     // It's something like 1%... grr - but still valid
                     data.chance = data.tipmessage;
