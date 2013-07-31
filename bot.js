@@ -108,6 +108,10 @@ socket.on("connect", function() {
     function parseTip(data) {
 	if (data.target == 'WhiskDiceBot') {
 	    // We got a tip!
+	    if (typeof data.message === "undefined") {
+		data.message = "";
+	    }
+	    try {
             data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 3, data.message.indexOf('%')));
             if (data.tipmessage > 0 && data.tipmessage < 76) {
                 // Recognised valid percentage.
@@ -125,6 +129,11 @@ socket.on("connect", function() {
                     data.chance = 50;
                     data.payout = Number((edge / (data.chance / 100)).toFixed(2));
                 }
+            }
+	    }
+	    catch(e) {
+                data.chance = 50;
+                data.payout = Number((edge / (data.chance / 100)).toFixed(2));
             }
             data.tipAmount = data.amount;
 	    // Is this bet gonna work?
