@@ -77,7 +77,7 @@ socket.on("connect", function() {
         chat("botgames", "RANDOM.ORG Error: Type: "+type+", Status Code: "+code+", Response Data: "+string, "e00");
     }
     function chat(room, msg, color) {
-	chatBuffer.push({room: room, message: msg, color: color});
+	chatBuffer.push({room: room, message: "[color=#" + color + "]" + msg + "[/color]", color: color});
     }
     function pm(user, msg, color) {
         chatBuffer.push({room: 'WhiskDiceBot:' + user.toLowerCase(), message: msg, color: color});
