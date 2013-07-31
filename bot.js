@@ -144,8 +144,10 @@ socket.on("connect", function() {
 	}
     }
     socket.on("tip", function(data) {
+	
 	data.parsedTip = parseTip(data);
-        if (data.room === 'botgames' && data.parsedTip.valid) {
+        console.log('[TIP] ' + JSON.stringify(data) + ' -> ' + JSON.stringify(data.parsedTip));
+        if (data.parsedTip && data.room === 'botgames' && data.parsedTip.valid) {
                 random.generateIntegers(function(integ) {
                     data.rand = integ[0][0];
                     if (data.rand < (data.parsedTip.chance + 1)) {
