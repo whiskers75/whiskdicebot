@@ -106,7 +106,7 @@ socket.on("connect", function() {
         return html.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi, '');
     }
     function parseTip(data) {
-	if (data.target == username) {
+	if (data.target == 'WhiskDiceBot') {
 	    // We got a tip!
             data.tipmessage = Number(data.message.substring(data.message.message.indexOf('%') - 3, data.message.message.indexOf('%')));
             if (data.tipmessage > 0 && data.tipmessage < 76) {
@@ -147,6 +147,7 @@ socket.on("connect", function() {
 	
 	data.parsedTip = parseTip(data);
         console.log('[TIP] ' + JSON.stringify(data) + ' -> ' + JSON.stringify(data.parsedTip));
+	if (data.parsedTip) {
         if (data.parsedTip && data.room === 'botgames' && data.parsedTip.valid) {
                 random.generateIntegers(function(integ) {
                     data.rand = integ[0][0];
@@ -213,6 +214,7 @@ socket.on("connect", function() {
                 }
                 tip({user: data.user, room: 'botgames', tip: totip, message: 'Exceeds balance!'});
             }
+	}
     });
     setTimeout(function() {
         socket.on("chat", function(data) {
