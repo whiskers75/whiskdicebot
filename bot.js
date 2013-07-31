@@ -106,18 +106,17 @@ socket.on("connect", function() {
         return html.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi, '');
     }
     function parseTip(message) {
-        // Is this actually a tip?
-        if (message.indexOf("<span class='label label-success'>has tipped " + username) !== -1) {
+	if (message.target == username) {
 	    var data = {message: message}
 	    // We got a tip!
-            data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 3, data.message.indexOf('%')));
+            data.tipmessage = Number(data.message.message.substring(data.message.message.indexOf('%') - 3, data.message.message.indexOf('%')));
             if (data.tipmessage > 0 && data.tipmessage < 76) {
                 // Recognised valid percentage.
                 data.chance = data.tipmessage;
                 data.payout = Number((edge / (data.tipmessage / 100)).toFixed(2));
             }
             else {
-                data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 2, data.message.indexOf('%')));
+                data.tipmessage = Number(data.message.substring(data.message.message.indexOf('%') - 2, data.message.message.indexOf('%')));
                 if (data.tipmessage > 0 && data.tipmessage < 76) {
                     // It's something like 1%... grr - but still valid
                     data.chance = data.tipmessage;
@@ -128,10 +127,10 @@ socket.on("connect", function() {
                     data.payout = Number((edge / (data.chance / 100)).toFixed(2));
                 }
             }
-            data.tipAmount = data.message.substring(data.message.indexOf('mBTC') - 5, data.message.indexOf('mBTC') - 1)
+            data.tipAmount = data.message.amount;
 	    // Is this bet gonna work?
 	    data.winAmount = data.tipAmount * data.payout
-	    data.winTip = (data.tipAmount * data.payout) * 0.98 // fees :(
+	    data.winTip = (data.tipAmount * data.payout)
 	    if (started && balance > data.winAmount && 20 > data.winAmount && 1.1 > data.tipAmount) {
 		data.valid = true;
 	    }
@@ -145,79 +144,81 @@ socket.on("connect", function() {
 	    return null;
 	}
     }
-    setTimeout(function() {
-	socket.on("chat", function(data) {
-            data.parsedTip = parseTip(data.message)
-	    console.log('[Chat] ' + data.user + ': ' + stripHTML(data.message) + ' (' + data.room + ', ' + JSON.stringify(data.parsedTip) + ')');
-	    
-            if (data.parsedTip && data.room === 'botgames') {
-		if (data.parsedTip.valid) {
-		    random.generateIntegers(function(integ) {
-			data.rand = integ[0][0];
-			if (data.rand < (data.parsedTip.chance + 1)) {
-                            tip({user: data.user, room: 'botgames', tip: data.parsedTip.winTip});
-			    db.set('lastwinner', data.user, redis.print);
-			    db.get('winnings/' + data.user, function(err, res) {
-				if (err) {
-				    dbraise(err)
-				}
-				else {
-				    db.set('winnings/' + data.user, Number(res) + data.parsedTip.winTip, redis.print)
-                                    chat('botgames', '✔ ' + data.user + ' won ' + data.parsedTip.winTip + ' mBTC! (' + (Number(res) + data.parsedTip.winTip).toFixed(2) +  ' mBTC) [' + data.parsedTip.chance + '%, ' + data.parsedTip.payout + 'x: ' + data.rand + " < " + (data.parsedTip.chance + 1) + ']', "090");
-				}
-			    });
-			    lastWinner = data.user;
-                            
-			}
-			else {
-                            db.get('winnings/' + data.user, function(err, res) {
-                                if (err) {
-                                    dbraise(err)
+    socket.on("tip", function(data) {
+	data.parsedTip = parseTip(data);
+        if (data.room === 'botgames' && data.parsedTip.valid) {
+                random.generateIntegers(function(integ) {
+                    data.rand = integ[0][0];
+                    if (data.rand < (data.parsedTip.chance + 1)) {
+                        tip({user: data.user, room: 'botgames', tip: data.parsedTip.winTip});
+                        db.set('lastwinner', data.user, redis.print);
+                        db.get('winnings/' + data.user, function(err, res) {
+                            if (err) {
+                                dbraise(err)
+                            }
+                            else {
+                                db.set('winnings/' + data.user, Number(res) + data.parsedTip.winTip, redis.print)
+                                chat('botgames', '✔ ' + data.user + ' won ' + data.parsedTip.winTip + ' mBTC! (' + (Number(res) + data.parsedTip.winTip).toFixed(2) +  ' mBTC) [' + data.parsedTip.chance + '%, ' + data.parsedTip.payout + 'x: ' + data.rand + " < " + (data.parsedTip.chance + 1) + ']', "090");
+                            }
+                        });
+                        lastWinner = data.user;
+                        
+                    }
+                    else {
+                        db.get('winnings/' + data.user, function(err, res) {
+                            if (err) {
+                                dbraise(err)
+                            }
+                            else {
+                                data.lost = Number(data.message.substring(58, data.message.indexOf('mBTC')));
+                                db.set('winnings/' + data.user, Number(res) - data.parsedTip.tipAmount, redis.print);
+                                chat('botgames', '✗ ' + data.user + ' lost ' + data.parsedTip.tipAmount + ' mBTC! (' + (Number(res) - data.parsedTip.tipAmount).toFixed(2) + ' mBTC) [' + data.parsedTip.chance + '%, ' + data.parsedTip.payout + 'x: ' + data.rand + " < " + (data.parsedTip.chance + 1) + ']', "e00");
+                            }
+                        });
+                        db.get('lastwinner', function(err, lastWinner) {
+                            if (err) {
+                                dbraise(err)
+                            }
+                            else {
+                                if ((data.rand > 85) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.49) && (balance > 17)) {
+                                    totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
+                                    
+                                    
+                                    tip({user: lastWinner, room: 'botgames', tip: totip});
+                                    db.get('winnings/' + data.user, function(err, res) {
+                                        if (err) {
+                                            dbraise(err)
+                                        }
+                                        else {
+                                            db.set('winnings/' + data.user, Number(res) + Number(totip * 0.98), redis.print)
+                                            chat('botgames','✔ ' + lastWinner + ' won ' + (totip * 0.98) + ' mBTC! (' ((Number(res) + Number(totip)) * 0.98).toFixed(2) + ') [last winner bonus]', "090");
+                                        }
+                                    });
                                 }
-                                else {
-                                    data.lost = Number(data.message.substring(58, data.message.indexOf('mBTC')));
-				    db.set('winnings/' + data.user, Number(res) - data.parsedTip.tipAmount, redis.print);
-                                    chat('botgames', '✗ ' + data.user + ' lost ' + data.parsedTip.tipAmount + ' mBTC! (' + (Number(res) - data.parsedTip.tipAmount).toFixed(2) + ' mBTC) [' + data.parsedTip.chance + '%, ' + data.parsedTip.payout + 'x: ' + data.rand + " < " + (data.parsedTip.chance + 1) + ']', "e00");
-				}
-                            });
-			    db.get('lastwinner', function(err, lastWinner) {
-                                if (err) {
-                                    dbraise(err)
-                                }
-                                else {
-				    if ((data.rand > 85) && lastWinner && (data.message.substring(58, data.message.indexOf('mBTC') - 1) > 0.49) && (balance > 17)) {
-					totip = String(data.message.substring(58, data.message.indexOf('mBTC') - 1) * 0.5);
-					
-					
-					tip({user: lastWinner, room: 'botgames', tip: totip});
-                                        db.get('winnings/' + data.user, function(err, res) {
-                                            if (err) {
-                                                dbraise(err)
-                                            }
-                                            else {
-                                                db.set('winnings/' + data.user, Number(res) + Number(totip * 0.98), redis.print)
-                                                chat('botgames','✔ ' + lastWinner + ' won ' + (totip * 0.98) + ' mBTC! (' ((Number(res) + Number(totip)) * 0.98).toFixed(2) + ') [last winner bonus]', "090");
-                                            }
-					});
-				    }
-                                }
-                            });
-                        };
-		    }, {secure: true, num: 1, min: 1, max: 100}, yell);
-		    
-                    socket.emit("getbalance", {});
-		}
-		else {
-                    chat('botgames', 'There was an error with your bet! (max bet exceeded, bot balance low, game not enabled)', "e00");
-		    if (data.parsedTip.tipAmount < 0.26) {
-			totip = String(data.parsedTip.tipAmount);
-		    }
-		    else {
-                        totip = String(data.parsedTip.tipAmount * 0.98)
-		    }
-                    tip({user: data.user, room: 'botgames', tip: totip, message: 'Exceeds balance!'});
-		}
+                            }
+                        });
+                    };
+                }, {secure: true, num: 1, min: 1, max: 100}, yell);
+            
+                socket.emit("getbalance", {});
             }
+            else {
+                chat('botgames', 'There was an error with your bet! (max bet exceeded, bot balance low, game not enabled)', "e00");
+                if (data.parsedTip.tipAmount < 0.26) {
+                    totip = String(data.parsedTip.tipAmount);
+                }
+                else {
+                    totip = String(data.parsedTip.tipAmount * 0.98)
+                }
+                tip({user: data.user, room: 'botgames', tip: totip, message: 'Exceeds balance!'});
+            }
+    });
+    setTimeout(function() {
+        socket.on("chat", function(data) {
+            data.parsedTip = parseTip(data.message)
+            console.log('[Chat] ' + data.user + ': ' + stripHTML(data.message) + ' (' + data.room + ', ' + JSON.stringify(data.parsedTip) + ')');
+	    
+            
             if (data.message === "!start" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
 		chat('botgames', 'Initializing WhiskDice game (!help for info)', "e00");
 		socket.emit("getbalance", {});
