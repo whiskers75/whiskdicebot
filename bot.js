@@ -417,7 +417,7 @@ socket.on("connect", function() {
             balance = balance + data.change;
         }
         else {
-            balance = data.balance;
+            balance = Number(data.balance);
         }
         console.log('NEW BALANCE: ' + balance);
         //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
