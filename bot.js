@@ -23,12 +23,12 @@ var tippedProfit = true;
 var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
-var socket = io.connect("http://192.155.86.153:8888/");
+var socket = io.connect("http://whiskchat-server.herokuapp.com/");
 console.log('[WDB] Initializing WhiskDiceBot!');
 console.log('[WDB] Connecting to CoinChat...');
 socket.on("connect", function() {
     console.log('[WDB] Connected to CoinChat. Logging in...');
-    socket.emit("accounts", {action: "login", username: 'botgames', password: process.env.whiskbotpass});
+    socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
     socket.on("loggedin", function(data) {
         console.log('[WDB] Logged in');
         var username = data.username;
