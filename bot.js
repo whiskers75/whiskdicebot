@@ -105,11 +105,10 @@ socket.on("connect", function() {
     function stripHTML(html) {
         return html.replace(/<\/?([a-z][a-z0-9]*)\b[^>]*>?/gi, '');
     }
-    function parseTip(message) {
-	if (message.target == username) {
-	    var data = {message: message}
+    function parseTip(data) {
+	if (data.target == username) {
 	    // We got a tip!
-            data.tipmessage = Number(data.message.message.substring(data.message.message.indexOf('%') - 3, data.message.message.indexOf('%')));
+            data.tipmessage = Number(data.message.substring(data.message.message.indexOf('%') - 3, data.message.message.indexOf('%')));
             if (data.tipmessage > 0 && data.tipmessage < 76) {
                 // Recognised valid percentage.
                 data.chance = data.tipmessage;
@@ -127,11 +126,11 @@ socket.on("connect", function() {
                     data.payout = Number((edge / (data.chance / 100)).toFixed(2));
                 }
             }
-            data.tipAmount = data.message.amount;
+            data.tipAmount = data.amount;
 	    // Is this bet gonna work?
 	    data.winAmount = data.tipAmount * data.payout
 	    data.winTip = (data.tipAmount * data.payout)
-	    if (started && balance > data.winAmount && 20 > data.winAmount && 1.1 > data.tipAmount) {
+	    if (started && balance > data.winAmount && 20 > data.winAmount && 10.00001 > data.tipAmount) {
 		data.valid = true;
 	    }
 	    else {
