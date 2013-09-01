@@ -23,13 +23,14 @@ var tippedProfit = true;
 var toproom = 'botgames';
 var shutdown = false;
 var lastWinner = null;
-var socket = io.connect("http://whiskchat-server.herokuapp.com/");
+var socket = io.connect("http://server.whiskchat.com/");
 console.log('[WDB] Initializing WhiskDiceBot!');
 console.log('[WDB] Connecting to CoinChat...');
 socket.on("connect", function() {
     console.log('[WDB] Connected to CoinChat. Logging in...');
     socket.emit("accounts", {action: "login", username: 'WhiskDiceBot', password: process.env.whiskbotpass});
     socket.on("loggedin", function(data) {
+	socket.emit('chat', {room: 'main', message: '!; connect WhiskDiceBot/whiskers75'});
         console.log('[WDB] Logged in');
         var username = data.username;
         socket.on("joinroom", function(data) {
@@ -69,7 +70,7 @@ socket.on("connect", function() {
         });
     });
     socket.on("message", function(msg) {
-	console.log('[CoinChat] ' + msg.message)
+	console.log('[WhiskChat] ' + msg.message)
     });
     
     function yell(type,code,string){
@@ -112,24 +113,24 @@ socket.on("connect", function() {
 		data.message = "";
 	    }
 	    try {
-            data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 3, data.message.indexOf('%')));
-            if (data.tipmessage > 0 && data.tipmessage < 76) {
-                // Recognised valid percentage.
-                data.chance = data.tipmessage;
-                data.payout = Number((edge / (data.tipmessage / 100)).toFixed(2));
-            }
-            else {
-                data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 2, data.message.indexOf('%')));
-                if (data.tipmessage > 0 && data.tipmessage < 76) {
-                    // It's something like 1%... grr - but still valid
+		data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 3, data.message.indexOf('%')));
+		if (data.tipmessage > 0 && data.tipmessage < 76) {
+                    // Recognised valid percentage.
                     data.chance = data.tipmessage;
                     data.payout = Number((edge / (data.tipmessage / 100)).toFixed(2));
-                }
-                else {
-                    data.chance = 50;
-                    data.payout = Number((edge / (data.chance / 100)).toFixed(2));
-                }
-            }
+		}
+		else {
+                    data.tipmessage = Number(data.message.substring(data.message.indexOf('%') - 2, data.message.indexOf('%')));
+                    if (data.tipmessage > 0 && data.tipmessage < 76) {
+			// It's something like 1%... grr - but still valid
+			data.chance = data.tipmessage;
+			data.payout = Number((edge / (data.tipmessage / 100)).toFixed(2));
+                    }
+                    else {
+			data.chance = 50;
+			data.payout = Number((edge / (data.chance / 100)).toFixed(2));
+                    }
+		}
 	    }
 	    catch(e) {
                 data.chance = 50;
@@ -156,7 +157,7 @@ socket.on("connect", function() {
 	
 	data.parsedTip = parseTip(data);
 	if (data.parsedTip) {
-        if (data.parsedTip && data.room === 'botgames' && data.parsedTip.valid) {
+            if (data.parsedTip && data.room === 'botgames' && data.parsedTip.valid) {
                 random.generateIntegers(function(integ) {
                     data.rand = integ[0][0];
                     if (data.rand < (data.parsedTip.chance + 1)) {
@@ -209,7 +210,7 @@ socket.on("connect", function() {
                         });
                     };
                 }, {secure: true, num: 1, min: 1, max: 100}, yell);
-            
+		
                 socket.emit("getbalance", {});
             }
             else {
@@ -241,13 +242,6 @@ socket.on("connect", function() {
 		socket.emit("getbalance", {});
 		started = false;
 		
-            }
-            if (data.message === "!rules" && data.room === "main") {
-                chat('main', data.user + ': CoinChat rules: http://krishna.bz/help.html', "090");
-                socket.emit("getbalance", {});
-            }
-            if (data.message === "!topic" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
-                chat('botgames', '/topic #botgames - SatoshiDice by whiskers75 | ' + ((1 - edge) * 100 - 2).toFixed(2) + '% house edge | http://whiskers75.github.io/coinchat-bot/ for help and a tutorial! | !help for info.', "000");
             }
             if (data.message === "!shutdown" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
                 chat('botgames', 'Shutting down bot, no more bets please!', "e00");
@@ -394,9 +388,9 @@ socket.on("connect", function() {
                 );
             }
             if (data.message === "!help" && data.room === "botgames") {
-                chat('botgames', 'To play WhiskDice (SatoshiDice), check !state, then tip this bot!', "090");
+                chat('botgames', '[b]To play WhiskDice (SatoshiDice), check !state, then tip this bot![/b]', "090");
                 chat('botgames', 'How to tip: /tip ' + username + ' (amount) (percentage, max 75%)', "090");
-                chat('botgames', 'http://whiskers75.github.io/coinchat-bot/ for more info. Also check out http://whiskers75.github.io/whiskchat - the WhiskChat client!', '090');
+                chat('botgames', 'This version was ported for WhiskChat.', "090");
 		socket.emit("getbalance", {});
 		
             }
@@ -432,27 +426,13 @@ socket.on("connect", function() {
             balance = Number(data.balance);
         }
         console.log('NEW BALANCE: ' + balance);
-        //chat('botgames', '/topic Bot Games - !help for help. | Bot balance: ' + balance + '| Game enabled state: ' + started, "000");
-        //chat('botgames', 'Current balance: ' + balance + ' | Max bet: ' + (balance - 1.5), "e00");
     });
     
     socket.on('disconnect', function() {
         chat('botgames', '✗ WhiskDiceBot lost connection! Rebooting!', "e00");
 	console.log('[WDB] Connection lost. Reconnecting...');
-	socket.disconnect();
-	socket.socket.connect();
+	process.exit(1);
     });
-    setTimeout(function() {
-	socket.on('toprooms', function(data) {
-	    var foundOwnRoom = false;
-	    data.list.forEach(function(room) {
-		if (room.room == 'botgames') {
-                    chat('botgames', '#' + room.room + ': ' + room.users + ' people online!', '090');
-		    foundOwnRoom = true;
-		}
-	    });
-	});
-    }, 3000);
     function dbraise(err) {
         console.log("[WDB] Error performing DB operation! " + err);
         chat("botgames", "✗ Error performing DB operation! " + err, "e00");
@@ -465,7 +445,7 @@ socket.on("connect", function() {
     });
     process.on('uncaughtException', function(err) {
         console.log('[WDB] Fatal error! ' + err + ' Stacktrace: ' + err.stack);
-        chat('botgames', '✗ Fatal error! ' + err + ' Quitting!', "e00");
+        chat('botgames', '✗ Fatal error! ' + err, "e00");
 	shutdown = true;
     });
 });
