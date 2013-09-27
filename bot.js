@@ -138,7 +138,7 @@ socket.on("connect", function() {
             if (typeof data.message === "undefined") {
                 data.message = "";
             }
-            if (data.tipmessage == 'donation') {
+            if (data.message == 'donation') {
                 chat('botgames', 'Thanks for the donation!', '090')
                 return null;
             }
