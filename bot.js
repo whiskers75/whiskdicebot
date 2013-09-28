@@ -443,7 +443,7 @@ socket.on("connect", function() {
 
             }
 
-            if (data.message.substr(0, 6) "!state" && data.room === "botgames" && data.user.indexOf('PM from') !== -1) {
+            if (data.message.substr(0, 6) == "!state" && data.room === "botgames" && data.user.indexOf('PM from') !== -1) {
                 socket.emit("getbalance", {});
                 if (started) {
                     setTimeout(function() {
