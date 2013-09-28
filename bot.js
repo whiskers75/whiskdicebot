@@ -261,14 +261,14 @@ socket.on("connect", function() {
             console.log('[Chat] ' + data.user + ': ' + stripHTML(data.message) + ' (' + data.room + ', ' + JSON.stringify(data.parsedTip) + ')');
 
 
-            if (data.message.substr(0, 6) == "!start" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "<strong>PM from whiskers75</strong>")) {
-                chat('botgames', '[b]Initializing WhiskDice game (!help for info)[/b]', "e00");
+            if (data.message === "!start" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
+                chat('botgames', 'Initializing WhiskDice game (!help for info)', "e00");
                 socket.emit("getbalance", {});
                 started = true;
 
             }
-            if (data.message.substr(0, 5) == "!stop" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "<strong>PM from whiskers75</strong>")) {
-                chat('botgames', '[b]Stopping WhiskDice game (!help for info)[/b]', "e00");
+            if (data.message === "!stop" && data.room === "botgames" && (data.user === "whiskers75" || data.user === "admin")) {
+                chat('botgames', 'Stopping WhiskDice game (!help for info)', "e00");
                 socket.emit("getbalance", {});
                 started = false;
 
@@ -431,19 +431,19 @@ socket.on("connect", function() {
                 );
             }
             if (data.message === "!help" && data.room === "botgames") {
-                chat('botgames', '[b]To play WhiskDice (SatoshiDice), [c]/msg WhiskDiceBot !state[/c], then tip this bot![/b]', "090");
-                chat('botgames', 'How to tip: [c]/tip ' + username + ' (amount) (percentage, max 75%)[/c]', "090");
+                chat('botgames', '[b]To play WhiskDice (SatoshiDice), check !state, then tip this bot![/b]', "090");
+                chat('botgames', 'How to tip: /tip ' + username + ' (amount) (percentage, max 75%)', "090");
                 chat('botgames', 'This version was ported for WhiskChat.', "090");
                 socket.emit("getbalance", {});
 
             }
             if (data.message === "!commands" && data.room === "botgames") {
-                chat('botgames', '[b]Commands: !help, !state (/msg WhiskDiceBot !state), !history (check bet history), !bots (get info on running bots)[/b]', "090");
+                chat('botgames', '[b]Commands: !help, !state, !history (check bet history), !bots (get info on running bots)[/b]', "090");
                 socket.emit("getbalance", {});
 
             }
 
-            if (data.message.substr(0, 6) == "!state" && data.room === "botgames" && data.user.indexOf('PM from') !== -1) {
+            if (data.message === "!state" && data.room === "botgames") {
                 socket.emit("getbalance", {});
                 if (started) {
                     setTimeout(function() {
