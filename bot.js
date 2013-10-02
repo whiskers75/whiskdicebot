@@ -328,6 +328,49 @@ socket.on("connect", function() {
                 var toproom = data.message.substr(7, data.message.length);
                 socket.emit('toprooms', {});
             }
+            if (data.message === "!stats" && data.room === "botgames") {
+            var wins = 0;
+            var losses = 0;
+            var waged = 0;
+            var totalwon = 0;
+            db.mget(['wins/' + data.user, 'losses/' + data.user, 'waged/' + data.user, 'totalwon/' + data.user], function(err, res) {
+                console.log(res);
+                if(err) {
+                    dbraise(err);
+                }
+                else {
+                    for (i=0;i<res.length;i++) {
+                        if (res[i] == null) {
+                            res[i] = 0;
+                        }
+                    }
+                    chat('botgames', data.user + ': Wins: ' + res[0] + ', Losses: ' + res[1] + ', Waged: ' + parseFloat(res[2]).toFixed(2) + ', Total Won: ' + parseFloat(res[3]).toFixed(2) + ', Return: ' + (parseFloat(res[3]/res[2])*100).toFixed(2) + '%.', '090');
+                }
+            });
+            /*db.get('losses/' + data.user, function(err, res) {
+                if(err) {
+                    dbraise(err);
+                }
+                else {
+                    if (res != null) {losses = res;}
+                }
+            });
+            db.get('waged/' + data.user, function(err, res) {
+                if(err) {
+                    dbraise(err);
+                }
+                else {
+                    if (res != null) {waged = res;}
+                }
+            });
+            db.get('totalwon/' + data.user, function(err, res) {
+                if(err) {
+                    dbraise(err);
+                }
+                else {
+                    if (res != null) {totalwon = res;}
+                }
+            });*/
             if (data.message === "!history" && data.room === "botgames") {
                 db.get('winnings/' + data.user, function(err, res) {
                     if (err) {
