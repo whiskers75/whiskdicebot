@@ -437,6 +437,11 @@ socket.on("connect", function() {
                 socket.emit("getbalance", {});
 
             }
+            //Does this work?
+            //This segment needs to be double checked for functionality. 
+            if(contains(data.message, ["<span class='label label-success'>has tipped " + username, "donation"])){
+               outputBuffer.push({room: data.room, color: "000", message: "Thank you for the tip, " + data.user + "!"})
+            }
             if (data.message === "!commands" && data.room === "botgames") {
                 chat('botgames', '[b]Commands: !help, !state, !history (check bet history), !bots (get info on running bots)[/b]', "090");
                 socket.emit("getbalance", {});
